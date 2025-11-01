@@ -1,0 +1,32 @@
+@import url('https://fonts.cdnfonts.com/css/satoshi');
+@import url('https://db.onlinewebfonts.com/c/e5cf4323214de97c3428d64ece016410?family=Integral+CF');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import "tailwindcss";
+
+
+body
+{
+    font-family: 'Satoshi', sans-serif;
+    width: 100%;
+}
+.integral-font
+{
+    font-family: "Integral CF" , sans-serif;
+}
+.outfit-font
+{
+    font-family: "Outfit" , sans-serif;
+}
+.container
+{
+    padding-left: 16px;
+    padding-right: 16px;
+}
+.header-brand
+{
+    
+    font-family: "Integral CF" , sans-serif;
+    @media screen and (max-width: 767px) {
+        font-family: "Outfit" , sans-serif;
+    }
+}

@@ -1,0 +1,51 @@
+import { create } from "zustand";
+import { getAllProducts } from "..";
+
+export const useAllProducts = create((set) => ({
+  products: [],
+  loading: false,
+  error: null,
+
+  fetchProducts: async () => {
+    set({ loading: true, error: null });
+
+    try {
+      const result = await getAllProducts();
+      set({ newArrivals: result, loading: false });
+    } catch (err) {
+      set({ error: err.message, loading: false });
+      console.error("Error fetching new arrivals:", err);
+    }
+  },
+}));
+
+export const useProductsByTag = create((set , get) => ({
+  productsByTag: {},
+  loading: false,
+  error: null,
+
+  fetchProductsByTag: async (tagName) => {
+    set({ loading: true, error: null });
+    const existingData = get().productsByTag[tagName];
+    if (existingData && existingData.length > 0) return;
+
+    try {
+      const allProducts = await getAllProducts();
+      if (!allProducts) return;
+
+      const result = allProducts.filter((product) => product.tags.some((tagInfo) => tagInfo.name === tagName));
+      if (result.length === 0) {
+        set({ loading: true, error: "No products for this tag" });
+      }
+
+      set((state) => ({
+        productsByTag: { ...state.productsByTag, [tagName]: result },
+        loading: false,
+      }));
+    } catch (err) {
+      set({ error: err.message, loading: false });
+      console.error(`Error fetching Products With This Tag (${tagName}):`, err);
+    }
+  },
+}));
+
