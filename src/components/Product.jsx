@@ -1,9 +1,10 @@
 import { IoStar } from "react-icons/io5";
 import { domain } from "../modules/core/index";
+import { Link } from "react-router-dom";
 
 export default function Product({product}) {
   return (
-    <div className="product">
+    <Link className="product" to={`/product/${product.documentId}`}>
       <div className="img-wrapper bg-[#F0EEED] rounded-[20px] overflow-hidden aspect-square flex items-center justify-center">
         <img className="w-full h-full object-cover" src={domain + product.mainImg.url} alt="" />
       </div>
@@ -27,6 +28,6 @@ export default function Product({product}) {
           <span className="text-[#FF3333] text-[12px] font-medium text-center">-20%</span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

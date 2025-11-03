@@ -11,7 +11,7 @@ export const useAllProducts = create((set) => ({
 
     try {
       const result = await getAllProducts();
-      set({ newArrivals: result, loading: false });
+      set({ products: result, loading: false });
     } catch (err) {
       set({ error: err.message, loading: false });
       console.error("Error fetching new arrivals:", err);

@@ -7,42 +7,10 @@ import { FaCheck } from "react-icons/fa6";
 import { HiOutlineArrowSmLeft } from "react-icons/hi";
 import { HiOutlineArrowSmRight } from "react-icons/hi";
 import useIsMobile from "../modules/core/components/useIsMobile";
+import { happyCustomers } from "../modules/core";
 
 export default function HappyCustomers() {
   const isMobile = useIsMobile()
-  const happyCustomers = [
-    {
-      stars: 5,
-      name: "Sarah M.",
-      comment: `"I'm blown away by the quality and style of the clothes I received from Shop.co. From casual wear to elegant dresses, every piece I've bought has exceeded my expectations."`,
-    },
-    {
-      stars: 5,
-      name: "Alex K.",
-      comment: `"Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions."`,
-    },
-    {
-      stars: 5,
-      name: "James L.",
-      comment: `"As someone who's always on the lookout for unique fashion pieces, I'm thrilled to have stumbled upon Shop.co. The selection of clothes is not only diverse but also on-point with the latest trends."`,
-    },
-    {
-      stars: 5,
-      name: "Daniel R.",
-      comment: `"Excellent quality and service. I love how comfortable the clothes are and how well they hold up after washing."`,
-    },
-    {
-      stars: 5,
-      name: "Layla S.",
-      comment: `"Shop.co never disappoints! The fabric feels so soft, and the attention to detail is impressive."`,
-    },
-    {
-      stars: 5,
-      name: "Omar H.",
-      comment: `"Amazing customer support and top-notch quality. I’ve already recommended Shop.co to my friends."`,
-    },
-  ];
-
   return (
     <div className="w-full py-20 overflow-visible">
       <div className="w-full relative flex justify-center mb-16">
@@ -88,7 +56,7 @@ export default function HappyCustomers() {
                 </div>
               </div>
               <div className="customer-comment mt-3 ">
-                <p className="text-[#00000099] text-[14px] md:text-[22px]">{customer.comment}</p>
+                <p className="text-[#00000099] text-[14px] md:text-[18px] leading-5 md:leading-[22px]">{customer.comment}</p>
               </div>
             </div>
           </SwiperSlide>
