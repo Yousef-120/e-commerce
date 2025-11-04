@@ -10,3 +10,12 @@ export const getAllProducts = async () => {
     console.error("Problem With Get All Products" , err)
   }
 };
+export const getOneProduct = async (productId) => {
+  try {
+    const res = await axios.get(domain + `/api/products/${productId}?populate=*`);
+    console.log(res.data.data)
+    return res.data.data;
+  } catch(err) {
+    console.error("Problem With Get The Product" , err)
+  }
+};
