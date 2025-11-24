@@ -1,6 +1,5 @@
 import { create } from "zustand";
-import { getAllProducts } from "..";
-import { getOneProduct } from "..";
+import { getAllProducts, getOneProduct, getAllSizes } from "..";
 
 export const useAllProducts = create((set) => ({
   products: [],
@@ -14,7 +13,7 @@ export const useAllProducts = create((set) => ({
       const result = await getAllProducts();
       set({ products: result, loading: false });
     } catch (err) {
-      set({ error: err.message, loading: false });
+      set({ error: err.message });
       console.error("Error fetching new arrivals:", err);
     }
   },
@@ -73,6 +72,27 @@ export const useProductsByTag = create((set, get) => ({
     } catch (err) {
       set({ error: err.message, loading: false });
       console.error(`Error fetching Products With This Tag (${tagName}):`, err);
+    }
+  },
+}));
+
+export const useAllSizes = create((set) => ({
+  sizes: [],
+  loading: false,
+  error: null,
+
+  fetchSizes: async () => {
+    try {
+      const receivingSizes = await getAllSizes();
+      if (!receivingSizes) return;
+
+      set(() => ({
+        sizes: receivingSizes,
+        loading: false,
+      }));
+    } catch (err) {
+      set({ error: "Not Found", loading: false });
+      console.error(`Error in receiving measurements`, err);
     }
   },
 }));

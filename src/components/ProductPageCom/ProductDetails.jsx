@@ -6,6 +6,7 @@ import { FiMinus, FiPlus } from "react-icons/fi";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { domain } from "../../modules/core";
+import Line from "../Line"
 
 export default function ProductDetails({ product, loading }) {
   const [mainImg, setMainImg] = useState();
@@ -25,7 +26,7 @@ export default function ProductDetails({ product, loading }) {
         {isLoading ? (
           // ================== ⏳ SKELETON MODE ==================
           <>
-            {/* صور المنتج Skeleton */}
+            {/* Skeleton Images */}
             <div className="product-images w-full lg:w-1/2 flex flex-col-reverse lg:flex-row gap-3.5 max-h-[570px]">
               <div className="sub-images flex lg:flex-col flex-row gap-3 lg:gap-3.5 w-full lg:w-[20%]">
                 {[...Array(3)].map((_, i) => (
@@ -37,13 +38,13 @@ export default function ProductDetails({ product, loading }) {
               </div>
             </div>
 
-            {/* التفاصيل Skeleton */}
+            {/* Skeleton Product Details */}
             <div className="product-details w-full lg:w-1/2">
               <Skeleton height={40} width="70%" className="mb-3.5" />
               <Skeleton height={20} width="40%" className="mb-3.5" />
               <Skeleton height={30} width="50%" className="mb-4" />
               <Skeleton count={4} height={18} width="100%" />
-              <div className="line bg-[#0000001A] h-px w-full my-6"></div>
+              <Line />
               <Skeleton height={40} width="50%" className="mb-3" />
               <Skeleton height={40} width="100%" />
             </div>
@@ -95,7 +96,7 @@ export default function ProductDetails({ product, loading }) {
 
               {/* Actions */}
               <div className="actions">
-                <div className="line bg-[#0000001A] h-px w-full my-6"></div>
+                <Line />
 
                 {/* Colors */}
                 <div className="colors flex flex-col gap-4">
@@ -109,7 +110,7 @@ export default function ProductDetails({ product, loading }) {
                   </div>
                 </div>
 
-                <div className="line bg-[#0000001A] h-px w-full my-6"></div>
+                <Line />
 
                 {/* Sizes */}
                 <div className="sizing flex flex-col gap-4">
@@ -129,8 +130,8 @@ export default function ProductDetails({ product, loading }) {
                   </div>
                 </div>
 
-                <div className="line bg-[#0000001A] h-px w-full my-6"></div>
-
+               
+                    <Line />
                 {/* Order */}
                 <div className="order flex flex-col sm:flex-row gap-5">
                   <div className="qty-selector py-4 px-6 flex items-center justify-between sm:gap-[38px] bg-[#F0F0F0] rounded-full w-full sm:w-fit">

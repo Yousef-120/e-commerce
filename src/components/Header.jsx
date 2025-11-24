@@ -4,7 +4,12 @@ import { Link, useLocation } from "react-router-dom";
 import { IoMenu, IoSearch } from "react-icons/io5";
 
 export default function Header() {
-  const navLinks = ["Shop", "On Sale", "New Arrivals", "Brands"];
+  const navLinks = [
+    {linkName: "Shop" , linkUrl: "/shop"},
+    {linkName: "On Sale" , linkUrl: "/"},
+    {linkName: "New Arrivals" , linkUrl: "/"},
+    {linkName: "Brands" , linkUrl: "/"}
+  ];
   const location = useLocation();
   return (
     <div className="w-full flex justify-center py-6">
@@ -21,9 +26,9 @@ export default function Header() {
             </div>
             <nav>
               <ul className="hidden md:flex gap-3">
-                {navLinks.map((linkName, i) => (
+                {navLinks.map((link, i) => (
                   <li key={i}>
-                    <Link to="/">{linkName}</Link>
+                    <Link to={link.linkUrl}>{link.linkName}</Link>
                   </li>
                 ))}
               </ul>

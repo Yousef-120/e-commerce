@@ -130,3 +130,22 @@ export const customersReviews = [
     date: "August 20, 2023"
   },
 ];
+
+export const colors = [
+  "#00C12B","#F50606","#F5DD06","#F57906","#06CAF5","#063AF5","#7D06F5","#F506A4","#FFFFFF","#000000"
+]
+
+export const categories = [
+  {name: 't-shirts' , url: '/'},
+  {name: 'shorts' , url: '/'},
+  {name: 'shirts' , url: '/'},
+  {name: 'hoodie' , url: '/'},
+  {name: 'jeans' , url: '/'},
+]
+
+export const styles = [
+  {name: 'casual' , url: '/'},
+  {name: 'formal' , url: '/'},
+  {name: 'party' , url: '/'},
+  {name: 'gym' , url: '/'},
+]
