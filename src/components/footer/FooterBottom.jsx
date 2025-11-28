@@ -1,4 +1,4 @@
-import { paymentMethods } from "../modules/core/index";
+import { paymentMethods } from "../../modules/core/index";
 
 export default function FooterBottom() {
   return (

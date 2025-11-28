@@ -1,5 +1,5 @@
 import { FiSliders } from "react-icons/fi";
-import Line from "../Line";
+import Line from "../ui/Line";
 import { IoIosArrowForward, IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import PriceSlider from "./PriceSlider";
 import { colors, categories, styles } from "../../modules/core/constants/constants";
@@ -67,7 +67,7 @@ export default function Filters() {
 
   return (
     <div
-      className={`w-full lg:w-[22%] bg-[#ffffff] lg:bg-transparent h-[84vh] lg:h-auto overflow-y-scroll lg:overflow-y-auto border border-[#0000001A] pt-5 pb-7 px-6 rounded-[20px] fixed lg:static bottom-0 left-0 z-50 transition-all duration-300 ease-in-out ${
+      className={`w-full lg:w-[22%] bg-[#ffffff] lg:bg-transparent h-[84vh] lg:h-fit overflow-y-scroll lg:overflow-y-auto border border-[#0000001A] pt-5 pb-7 px-6 rounded-[20px] fixed lg:static bottom-0 left-0 z-50 transition-all duration-300 ease-in-out ${
         filterActive ? "translate-y-0 opacity-100 pointer-events-auto" : "translate-y-full opacity-0 pointer-events-none"
       } lg:translate-y-0 lg:opacity-100 lg:pointer-events-auto`}
     >

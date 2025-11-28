@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 
 export default function PriceSlider() {
   const [value, setValue] = useState([5, 1500]); // min & max initial

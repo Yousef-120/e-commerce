@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { socialLinks } from "../modules/core/index";
+import { socialLinks } from "../../modules/core/index";
 
 export default function FooterMainColumn() {
   return (

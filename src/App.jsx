@@ -1,11 +1,10 @@
-import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainLayout from "./Layouts/MainLayout";
 import HomePage from "./pages/HomePage";
 import ProductPage from "./pages/ProductPage";
 import ShopPage from "./pages/ShopPage";
-import { h1 } from "framer-motion/client";
-import ScrollToTop from "./components/ScrollToTop";
+import ScrollToTop from "./components/common/ScrollToTop";
+import CartPage from "./pages/CartPage";
 
 export default function App() {
   return (
@@ -18,6 +17,10 @@ export default function App() {
           {/* Shop */}
           <Route path="/shop">
             <Route index element={<ShopPage />} />
+          </Route>
+          {/* Cart */}
+          <Route path="/cart">
+            <Route index element={<CartPage />} />
           </Route>
         </Route>
         {/* Error 404 */}

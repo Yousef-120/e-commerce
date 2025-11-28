@@ -6,8 +6,8 @@ import { IoStar } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
 import { HiOutlineArrowSmLeft } from "react-icons/hi";
 import { HiOutlineArrowSmRight } from "react-icons/hi";
-import useIsMobile from "../modules/core/components/useIsMobile";
-import { happyCustomers } from "../modules/core";
+import useIsMobile from "../../modules/core/components/useIsMobile";
+import { happyCustomers } from "../../modules/core";
 
 export default function HappyCustomers() {
   const isMobile = useIsMobile()

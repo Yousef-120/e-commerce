@@ -1,10 +1,10 @@
-import Filters from "../components/ShopPageCom/Filters";
-import BreadCrumbs from "../components/Breadcrumbs";
-import Products from "../components/ShopPageCom/Products";
+import Filters from "../components/ShopPage/Filters";
+import BreadCrumbs from "../components/common/Breadcrumbs";
+import Products from "../components/ShopPage/products";
 
 export default function ShopPage() {
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center mb-40">
       <div className="container">
         <BreadCrumbs />
 

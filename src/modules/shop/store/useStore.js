@@ -13,6 +13,22 @@ export const useStore = create((set) => ({
   selectedSize: "",
   setSelectedSize: (val) => set({ selectedSize: val }),
 
+  selectedQty: 1,
+  setSelectedQty: (val) => set({ selectedQty: val }),
+
   selectedFilterOptions: { color: "", size: "" },
   setSelectedFilterOptions: (val) => set({ selectedFilterOptions: val }),
+
+  cart: [],
+  addToCart: (item) =>
+    set((state) => {
+      const exists = state.cart.some((product) => item.documentId === product.documentId);
+
+      if (exists) {
+        return state;
+      }
+      return {
+        cart: [...state.cart, item],
+      };
+    }),
 }));

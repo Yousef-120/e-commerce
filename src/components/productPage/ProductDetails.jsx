@@ -2,20 +2,20 @@ import productImg from "../../assets/product.png";
 import { IoStar } from "react-icons/io5";
 import { MdCheck } from "react-icons/md";
 import { useEffect, useState } from "react";
-import { FiMinus, FiPlus } from "react-icons/fi";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { domain } from "../../modules/core";
-import Line from "../Line"
+import Line from "../ui/Line"
+import QtySelector from "../common/QtySelector";
+import { useStore } from "../../modules/shop/store/useStore";
 
 export default function ProductDetails({ product, loading }) {
   const [mainImg, setMainImg] = useState();
   const stars = 5;
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setselectedSize] = useState("");
-  const [qty, setQty] = useState(1);
   const isLoading = loading || !product;
-
+  const { addToCart } = useStore();
   useEffect(() => {
     product && setMainImg(domain + product.mainImg.url);
   }, [product]);
@@ -121,7 +121,7 @@ export default function ProductDetails({ product, loading }) {
                         onClick={() => setselectedSize(size.name)}
                         key={i}
                         className={`py-3 px-6 rounded-full cursor-pointer transition ${
-                          selectedSize === size.name ? "bg-black text-white" : "bg-[#F0F0F0] text-[#00000099] hover:bg-black hover:text-white"
+                          selectedSize === size.name ? "bg-black text-white" : "bg-[#F0F0F0] text-[#00000099] transition-colors duration-200"
                         }`}
                       >
                         {size.name}
@@ -134,18 +134,8 @@ export default function ProductDetails({ product, loading }) {
                     <Line />
                 {/* Order */}
                 <div className="order flex flex-col sm:flex-row gap-5">
-                  <div className="qty-selector py-4 px-6 flex items-center justify-between sm:gap-[38px] bg-[#F0F0F0] rounded-full w-full sm:w-fit">
-                    <button onClick={() => setQty((qty) => (qty > 1 ? qty - 1 : 1))}>
-                      <FiMinus size={26} />
-                    </button>
-                    <div className="w-5 flex justify-center items-center">
-                      <span className="font-bold">{qty}</span>
-                    </div>
-                    <button onClick={() => setQty((qty) => (qty < 20 ? qty + 1 : 20))}>
-                      <FiPlus size={26} />
-                    </button>
-                  </div>
-                  <button className="add-to-cart w-full py-4 px-12 bg-[#000000] rounded-full text-[#FFFFFF] font-medium cursor-pointer hover:bg-[#1f1f1f] transition">Add To Cart</button>
+                  <QtySelector />
+                  <button onClick={()=> addToCart(product)} className="add-to-cart w-full py-4 px-12 bg-[#000000] rounded-full text-[#FFFFFF] font-medium cursor-pointer hover:bg-[#1f1f1f] transition">Add To Cart</button>
                 </div>
               </div>
             </div>

@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import versace from "../assets/sponsers/versace.png";
-import zara from "../assets/sponsers/zara.png";
-import gucci from "../assets/sponsers/gucci.png";
-import prada from "../assets/sponsers/prada.png";
-import calvinKlein from "../assets/sponsers/calvinKlein.png";
-import useIsMobile from "../modules/core/components/useIsMobile";
+import versace from "../../assets/sponsers/versace.png";
+import zara from "../../assets/sponsers/zara.png";
+import gucci from "../../assets/sponsers/gucci.png";
+import prada from "../../assets/sponsers/prada.png";
+import calvinKlein from "../../assets/sponsers/calvinKlein.png";
+import useIsMobile from "../../modules/core/components/useIsMobile";
 
 export default function Sponsors() {
   const sponsorsImages = [versace, zara, gucci, prada, calvinKlein];

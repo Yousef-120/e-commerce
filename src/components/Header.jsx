@@ -40,10 +40,10 @@ export default function Header() {
               <Link to="/" className="block md:hidden">
                 <IoSearch className="w-6 h-6" />
               </Link>
-              <Link to="/">
+              <Link to="/cart">
                 <FiShoppingCart className="w-6 h-6" />
               </Link>
-              <Link to="/">
+              <Link to="/profile">
                 <CgProfile className="w-6 h-6" />
               </Link>
             </div>

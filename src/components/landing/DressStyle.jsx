@@ -1,10 +1,9 @@
-import { div } from "framer-motion/client";
-import img1 from "../assets/dressStyles/img-1.png";
-import img2 from "../assets/dressStyles/img-2.png";
-import img3 from "../assets/dressStyles/img-3.png";
-import img4 from "../assets/dressStyles/img-4.png";
+import img1 from "../../assets/dressStyles/img-1.png";
+import img2 from "../../assets/dressStyles/img-2.png";
+import img3 from "../../assets/dressStyles/img-3.png";
+import img4 from "../../assets/dressStyles/img-4.png";
 import Style from "./Style";
-import useIsMobile from "../modules/core/components/useIsMobile";
+import useIsMobile from "../../modules/core/components/useIsMobile";
 export default function DressStyle() {
   const isMobile = useIsMobile();
 

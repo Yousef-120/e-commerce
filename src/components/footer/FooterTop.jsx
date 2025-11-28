@@ -1,7 +1,7 @@
 import FooterColumn from "./FooterColumn";
 import FooterMainColumn from "./FooterMainColumn";
-import { links } from "../modules/core/index";
-import useIsMobile from "../modules/core/components/useIsMobile";
+import { links } from "../../modules/core/index";
+import useIsMobile from "../../modules/core/components/useIsMobile";
 
 export default function FooterTop() {
   const isMobile = useIsMobile()

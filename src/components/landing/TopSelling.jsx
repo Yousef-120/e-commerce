@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { useProductsByTag } from "../modules/shop";
-import Product from "./Product";
+import { useProductsByTag } from "../../modules/shop";
+import Product from "../common/Product";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import useIsMobile from "../modules/core/components/useIsMobile";
+import useIsMobile from "../../modules/core/components/useIsMobile";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 

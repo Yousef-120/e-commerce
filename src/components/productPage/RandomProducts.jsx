@@ -1,27 +1,27 @@
-import { useEffect, useState } from "react";
-import Product from "./Product";
+import { useEffect } from "react";
+import Product from ".././common/Product";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useProductsByTag } from "../modules/shop";
+import { useAllProducts } from "../../modules/shop";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import useIsMobile from "../modules/core/components/useIsMobile";
+import useIsMobile from "../../modules/core/components/useIsMobile";
 
-export default function NewArrivals() {
-  const { productsByTag, fetchProductsByTag, loading } = useProductsByTag();
-  const tag = "newArrivals";
-  const newArrivals = productsByTag[tag] || [];
+export default function RandomProducts() {
+  const { products, fetchProducts, loading } = useAllProducts();
+  const secName = "You might also like";
+  const productsFiltered = products.slice(0,4) || [];
 
   const isMobile = useIsMobile()
 
    useEffect(() => {
-    fetchProductsByTag(tag);
-  }, [fetchProductsByTag, tag]);
+    fetchProducts();
+  }, [fetchProducts, secName]);
   
   return (
     <div className="w-full flex justify-center">
-      <div className="container pt-[72px] pb-16 border-b border-[#0000001A]">
-        <h3 className="integral-font text-center font-bold text-[32px] md:text-5xl leading-[100%] tracking-normal">New Arrivals</h3>
+      <div className="container mt-16 mb-24">
+        <h3 className="integral-font text-center font-bold text-[32px] md:text-5xl leading-[100%] tracking-normal capitalize lg:uppercase">{secName}</h3>
 
         {/* Mobile */}
         {isMobile ? (
@@ -38,7 +38,7 @@ export default function NewArrivals() {
                       </div>
                     </SwiperSlide>
                   ))
-              : newArrivals.map((product, i) => (
+              : productsFiltered.map((product, i) => (
                   <SwiperSlide key={i}>
                     <Product product={product} />
                   </SwiperSlide>
@@ -59,13 +59,9 @@ export default function NewArrivals() {
                       </div>
                     </div>
                   ))
-              : newArrivals.map((product, i) => <Product key={i} product={product} />)}
+              : productsFiltered.map((product, i) => <Product key={i} product={product} />)}
           </div>
         )}
-
-        <div className="btn-div w-full flex justify-center mt-9">
-          <button className=" w-full md:w-auto rounded-full py-[15px] px-20 border border-[#0000001A] text-[#000000] cursor-pointer hover:scale-105 transition-transform duration-300">View All</button>
-        </div>
       </div>
     </div>
   );

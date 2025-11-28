@@ -1,5 +1,5 @@
 import { IoStar } from "react-icons/io5";
-import { domain } from "../modules/core/index";
+import { domain } from "../../modules/core/index";
 import { Link } from "react-router-dom";
 
 export default function Product({ product }) {

@@ -5,26 +5,28 @@ import ShopProduct from "./ShopProduct";
 import { useAllProducts } from "../../modules/shop";
 import { useStore } from "../../modules/shop/store/useStore";
 import useIsMobile from "../../modules/core/components/useIsMobile";
-import Loader from "../Loader";
+import Loader from "../ui/Loader";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import Line from "../ui/Line";
+import Pagination from "./Pagination";
+
 export default function Products() {
   const { setFilterActive } = useStore();
   const { applyingFilters, setApplyingFilters } = useStore();
   const { products, loading, fetchProducts } = useAllProducts();
   const isMobile = useIsMobile();
   const [tagsOpened, setTagsOpened] = useState(false);
-  const dropdownRef = useRef(null)
+  const dropdownRef = useRef(null);
   useEffect(() => {
     fetchProducts();
-    const handleClickOutside= (e)=>
-    {
+    const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setTagsOpened(false)
+        setTagsOpened(false);
       }
-    }
-    document.addEventListener("mousedown" , handleClickOutside)
-    return ()=> document.removeEventListener("mousedown" , handleClickOutside)
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -66,17 +68,22 @@ export default function Products() {
       </div>
 
       {!applyingFilters ? (
-        <div className="content grid grid-cols-2 lg:grid-cols-4 gap-x-3.5 gap-y-6 lg:gap-x-5 lg:gap-y-9">
-          {loading
-            ? Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="product">
-                  <Skeleton height={200} borderRadius={20} />
-                  <Skeleton width="80%" className="mt-3" />
-                  <Skeleton width="60%" />
-                  <Skeleton width="40%" />
-                </div>
-              ))
-            : products && products.map((product, i) => <ShopProduct key={i} product={product} />)}
+        <div>
+          <div className="content grid grid-cols-2 lg:grid-cols-4 gap-x-3.5 gap-y-6 lg:gap-x-5 lg:gap-y-9">
+            {loading
+              ? Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="product">
+                    <Skeleton height={200} borderRadius={20} />
+                    <Skeleton width="80%" className="mt-3" />
+                    <Skeleton width="60%" />
+                    <Skeleton width="40%" />
+                  </div>
+                ))
+              : products && products.map((product, i) => <ShopProduct key={i} product={product} />)}
+          </div>
+          <Line className={"mt-8 mb-5"} />
+
+          <Pagination />
         </div>
       ) : (
         <div className="flex justify-center items-center h-1/2">

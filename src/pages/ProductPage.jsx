@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
-import ProductDetails from "../components/ProductPageCom/ProductDetails";
-import ProductTabs from "../components/ProductPageCom/ProductTabs";
-import Breadcrumbs from "../components/Breadcrumbs";
-import RandomProducts from "../components/ProductPageCom/RandomProducts";
+import ProductDetails from "../components/ProductPage/ProductDetails";
+import ProductTabs from "../components/ProductPage/ProductTabs";
+import Breadcrumbs from "../components/common/Breadcrumbs";
+import RandomProducts from "../components/ProductPage/RandomProducts";
 import { useOneProduct } from "../modules/shop";
 import { useEffect } from "react";
 
