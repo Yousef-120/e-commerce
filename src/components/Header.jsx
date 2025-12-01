@@ -2,21 +2,21 @@ import { FiShoppingCart } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
 import { Link, useLocation } from "react-router-dom";
 import { IoMenu, IoSearch } from "react-icons/io5";
+import { navLinks } from "../modules/core";
+import { useStore } from "../modules/shop/store/useStore";
+import Sidebar from "./Sidebar";
 
 export default function Header() {
-  const navLinks = [
-    {linkName: "Shop" , linkUrl: "/shop"},
-    {linkName: "On Sale" , linkUrl: "/"},
-    {linkName: "New Arrivals" , linkUrl: "/"},
-    {linkName: "Brands" , linkUrl: "/"}
-  ];
   const location = useLocation();
+  const { menuActive, setMenuActive } = useStore();
+
   return (
     <div className="w-full flex justify-center py-6">
+      <Sidebar />
       <div className="container">
         <div className="content flex justify-between items-center">
           <div className="flex gap-4 md:gap-10 items-center">
-            <button className="flex justify-center items-center md:hidden">
+            <button onClick={() => setMenuActive(true)} className="flex justify-center items-center md:hidden">
               <IoMenu size={38} />
             </button>
             <div className="header-brand">
@@ -26,11 +26,14 @@ export default function Header() {
             </div>
             <nav>
               <ul className="hidden md:flex gap-3">
-                {navLinks.map((link, i) => (
-                  <li key={i}>
-                    <Link to={link.linkUrl}>{link.linkName}</Link>
-                  </li>
-                ))}
+                {navLinks.map(
+                  (link, i) =>
+                    link.linkName !== "Home" && (
+                      <li key={i}>
+                        <Link to={link.linkUrl}>{link.linkName}</Link>
+                      </li>
+                    )
+                )}
               </ul>
             </nav>
           </div>

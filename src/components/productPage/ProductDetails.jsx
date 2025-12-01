@@ -5,21 +5,45 @@ import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { domain } from "../../modules/core";
-import Line from "../ui/Line"
+import Line from "../ui/Line";
 import QtySelector from "../common/QtySelector";
 import { useStore } from "../../modules/shop/store/useStore";
+import SmallLoader from "../ui/smallLoader";
 
 export default function ProductDetails({ product, loading }) {
   const [mainImg, setMainImg] = useState();
   const stars = 5;
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setselectedSize] = useState("");
+  const [selectedQty, setSelectedQty] = useState(1);
+
   const isLoading = loading || !product;
-  const { addToCart } = useStore();
+  const { addToCart, isInCart } = useStore();
+  const { setSelectedProductOptions } = useStore();
+  const [btnloading, setBtnLoading] = useState(false);
+
+  const handleAdd = () => {
+    if (isInCart(product.documentId)) return;
+
+    if (selectedSize != "" && selectedColor != "") {
+      setBtnLoading(true);
+      setSelectedProductOptions(product.documentId, "color", selectedColor);
+      setSelectedProductOptions(product.documentId, "size", selectedSize);
+      setSelectedProductOptions(product.documentId, "qty", selectedQty);
+      addToCart(product);
+      setTimeout(() => {
+        setBtnLoading(false);
+        setSelectedQty(1);
+      }, 1000);
+    } else {
+      alert("You must complete product information order");
+    }
+  };
+
   useEffect(() => {
     product && setMainImg(domain + product.mainImg.url);
   }, [product]);
-
+  
   return (
     <div className="w-full flex justify-center mb-[118px]">
       <div className="container flex flex-col lg:flex-row gap-10 lg:items-stretch">
@@ -130,12 +154,19 @@ export default function ProductDetails({ product, loading }) {
                   </div>
                 </div>
 
-               
-                    <Line />
+                <Line />
                 {/* Order */}
                 <div className="order flex flex-col sm:flex-row gap-5">
-                  <QtySelector />
-                  <button onClick={()=> addToCart(product)} className="add-to-cart w-full py-4 px-12 bg-[#000000] rounded-full text-[#FFFFFF] font-medium cursor-pointer hover:bg-[#1f1f1f] transition">Add To Cart</button>
+                  <QtySelector selectedQty={selectedQty} setSelectedQty={setSelectedQty} product={product} />
+                  <button
+                    onClick={handleAdd}
+                    disabled={btnloading || isInCart(product.documentId)}
+                    className={`w-full py-4 px-12 rounded-full font-medium transition ${btnloading && "flex justify-center items-center"} ${
+                      isInCart(product.documentId) ? "bg-[#2d2d2d] text-[#aaaaaa] cursor-not-allowed" : "bg-[#000000] text-[#ffffff] hover:bg-[#1f1f1f] cursor-pointer"
+                    } `}
+                  >
+                    {btnloading ? <SmallLoader className={"w-6! h-6!"} /> : isInCart(product.documentId) ? "Added To Cart" : "Add To Cart"}
+                  </button>
                 </div>
               </div>
             </div>

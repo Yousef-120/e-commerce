@@ -18,6 +18,7 @@ export default function Products() {
   const isMobile = useIsMobile();
   const [tagsOpened, setTagsOpened] = useState(false);
   const dropdownRef = useRef(null);
+  
   useEffect(() => {
     fetchProducts();
     const handleClickOutside = (e) => {

@@ -47,14 +47,12 @@ export const useOneProduct = create((set, get) => ({
 }));
 
 export const useProductsByTag = create((set, get) => ({
-  productsByTag: {},
+  productsByTag: [],
   loading: false,
   error: null,
 
   fetchProductsByTag: async (tagName) => {
-    set({ loading: true, error: null });
-    const existingData = get().productsByTag[tagName];
-    if (existingData && existingData.length > 0) return;
+    set({ loading: true, error: null })
 
     try {
       const allProducts = await getAllProducts();

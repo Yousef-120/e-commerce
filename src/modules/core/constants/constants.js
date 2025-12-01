@@ -5,6 +5,14 @@ import payment3 from "../../../assets/payment-methods/payment-3.png";
 import payment4 from "../../../assets/payment-methods/payment-4.png";
 import payment5 from "../../../assets/payment-methods/payment-5.png";
 
+export const navLinks = [
+    {linkName: "Home" , linkUrl: "/"},
+    {linkName: "Shop" , linkUrl: "/shop"},
+    {linkName: "On Sale" , linkUrl: "/"},
+    {linkName: "New Arrivals" , linkUrl: "/"},
+    {linkName: "Brands" , linkUrl: "/"}
+  ];
+
 export const links = [
   {
     sectionName: "Company",

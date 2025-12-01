@@ -6,13 +6,15 @@ export default function CartProducts() {
   const { cart } = useStore();
 
   return (
-    <div className="flex flex-col border border-[#0000001A] py-5 px-6 rounded-[20px] max-w-[715px] w-full">
-      {cart?.map((product, i) => (
-        <div key={product.documentId}>
-          <CartProduct product={product} />
-          {i !== cart.length - 1 && <Line />}
-        </div>
-      ))}
-    </div>
+    cart.length !== 0 && (
+      <div className="flex flex-col border border-[#0000001A] p-3.5 lg:py-5 lg:px-6 rounded-[20px] w-full lg:w-[50%] max-h-[700px] overflow-y-auto cartProducts-scroll">
+        {cart?.map((product, i) => (
+          <div key={product.documentId}>
+            <CartProduct product={product} />
+            {i !== cart.length - 1 && <Line />}
+          </div>
+        ))}
+      </div>
+    )
   );
 }

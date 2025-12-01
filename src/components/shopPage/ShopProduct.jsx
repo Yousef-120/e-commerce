@@ -23,7 +23,7 @@ export default function ShopProduct({ product }) {
       </div>
 
       <div className="pricing flex gap-[5px] lg:gap-2.5 mt-1 lg:mt-2 items-center">
-        <span className="final-price text-[#000000] text-[20px] lg:text-2xl font-bold">${product.finalPrice}</span>
+        <span className="final-price text-[#000000] text-[20px] lg:text-2xl font-bold">${product.price}</span>
         <span className="original-price text-[#00000066] text-[20px] lg:text-2xl font-bold">${product.originalPrice}</span>
 
         <div className="discount bg-[#FF33331A] py-1.5 px-3.5 rounded-full flex justify-center items-center">

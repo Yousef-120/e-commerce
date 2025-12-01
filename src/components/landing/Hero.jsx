@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import hero from "../../assets/hero.png";
 import star from "../../assets/star.png";
 
@@ -11,12 +12,12 @@ export default function Hero() {
             <span className="block">that matches</span>
             <span className="block">your style</span>
           </h1>
-          <p className="mt-5 md:mt-8 text-[#00000099] max-w-full ">
+          <p className="mt-5 mb-6 md:mb-8 md:mt-8 text-[#00000099] max-w-full ">
             Browse through our diverse range of meticulously crafted garments, designed
             <br className="hidden md:block" />
             to bring out your individuality and cater to your sense of style.
           </p>
-          <button className="bg-[#000000] rounded-full py-[15px] px-16 text-[#FFFFFF] mt-6 md:mt-8 cursor-pointer hover:bg-[#1a1a1a] transition-colors duration-300 w-full md:w-auto">Shop Now</button>
+          <Link to='/shop' className="bg-[#000000] rounded-full py-[15px] px-16 text-[#FFFFFF] cursor-pointer hover:bg-[#1a1a1a] transition-colors duration-300 w-full md:w-auto">Shop Now</Link>
 
           <div className="lg franchises gap-8 mt-12 hidden md:flex">
             <div className="franchise">
