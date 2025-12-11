@@ -11,7 +11,11 @@ export const useAllProducts = create((set) => ({
 
     try {
       const result = await getAllProducts();
-      set({ products: result, loading: false });
+      if (result.length === 0) {
+        set({ loading: true });
+      } else {
+        set({ products: result, loading: false });
+      }
     } catch (err) {
       set({ error: err.message });
       console.error("Error fetching new arrivals:", err);
@@ -52,7 +56,7 @@ export const useProductsByTag = create((set, get) => ({
   error: null,
 
   fetchProductsByTag: async (tagName) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null });
 
     try {
       const allProducts = await getAllProducts();
