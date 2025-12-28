@@ -8,15 +8,15 @@ import Sidebar from "./Sidebar";
 
 export default function Header() {
   const location = useLocation();
-  const { menuActive, setMenuActive } = useStore();
+  const { setMenuActive } = useStore();
 
   return (
     <div className="w-full flex justify-center py-6">
       <Sidebar />
       <div className="container">
         <div className="content flex justify-between items-center">
-          <div className="flex gap-4 md:gap-10 items-center">
-            <button onClick={() => setMenuActive(true)} className="flex justify-center items-center md:hidden">
+          <div className="flex gap-4 lg:gap-10 items-center">
+            <button onClick={() => setMenuActive(true)} className="flex justify-center items-center lg:hidden">
               <IoMenu size={38} />
             </button>
             <div className="header-brand">
@@ -25,7 +25,7 @@ export default function Header() {
               </Link>
             </div>
             <nav>
-              <ul className="hidden md:flex gap-3">
+              <ul className="hidden lg:flex gap-3">
                 {navLinks.map(
                   (link, i) =>
                     link.linkName !== "Home" && (
@@ -37,7 +37,7 @@ export default function Header() {
               </ul>
             </nav>
           </div>
-          <div className="md:w-1/2 flex gap-10 items-center">
+          <div className="md:w-3/5 lg:w-1/2 flex gap-10 items-center">
             <input className="w-full outline-0 py-3 px-4 rounded-full bg-[#F0F0F0] hidden md:block" type="search" name="" id="" placeholder="Search for products..." />
             <div className="actions flex gap-3.5">
               <Link to="/" className="block md:hidden">

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { domain } from "../../modules/core/";
 import { useStore } from "../../modules/shop/store/useStore";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function CartProduct({ product }) {
   const { cart, removeFromCart } = useStore();
@@ -26,9 +27,9 @@ export default function CartProduct({ product }) {
   });
 
   return (
-    <div className="product flex justify-between  text-[#000000]">
-      <div className="flex gap-4 w-full">
-        <div className="bg-[#F0EEED] aspect-square max-w-[124px] rounded-lg overflow-hidden">
+    <Link to={`product/${product.documentId}`} className="product flex justify-between text-[#000000]">
+      <div className="flex items-center gap-4 w-full">
+        <div className="bg-[#F0EEED] aspect-square max-w-[136px] rounded-lg overflow-hidden">
           <img className="object-cover w-full h-full" src={domain + product.mainImg?.url} alt="" />
         </div>
         <div className="info flex justify-between w-full">
@@ -39,7 +40,7 @@ export default function CartProduct({ product }) {
                 <BiSolidTrash color="#FF3333" size={24} />
               </motion.button>
             </div>
-            <div className="flex flex-col mb-2.5 lg:mb-4 text-[14px]">
+            <div className="flex flex-col mb-2.5 text-[14px]">
               <span>
                 Size: <span className="text-[#00000099]">{size}</span>
               </span>
@@ -49,11 +50,11 @@ export default function CartProduct({ product }) {
             </div>
             <div className="flex justify-between w-full">
               <div className="price font-bold text-[24px] text-[#000000]">${product.price}</div>
-              <QtySelector className={"gap-2.5 lg:gap-5! px-2! py-1! w-fit!"} iconSize={20} selectedQty={qty} setSelectedQty={(newQty) => setSelectedProductOptions(product.documentId, "qty", newQty)} />
+              <QtySelector className={"gap-2.5 lg:gap-5! px-2! py-1! lg:py-2.5! w-fit!"} iconSize={20} selectedQty={qty} setSelectedQty={(newQty) => setSelectedProductOptions(product.documentId, "qty", newQty)} />
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

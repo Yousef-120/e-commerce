@@ -6,16 +6,17 @@ import { IoStar } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
 import { HiOutlineArrowSmLeft } from "react-icons/hi";
 import { HiOutlineArrowSmRight } from "react-icons/hi";
-import useIsMobile from "../../modules/core/components/useIsMobile";
+import useDeviceType from "../../modules/core/components/useDeviceType";
 import { happyCustomers } from "../../modules/core";
 
 export default function HappyCustomers() {
-  const isMobile = useIsMobile()
+  const device = useDeviceType()
+
   return (
     <div className="w-full py-20 overflow-visible">
       <div className="w-full relative flex justify-center mb-16">
         <div className="content container flex justify-between items-center">
-          {!isMobile && <p></p>}
+          {device == "desktop" && <p></p>}
           <h5 className="integral-font uppercase font-bold text-[32px] md:text-5xl md:text-center leading-9 md:leading-[100%] tracking-normal">OUR HAPPY CUSTOMERS</h5>
           <div className="controls flex items-center gap-3">
             <button className="control-left cursor-pointer">
@@ -35,7 +36,7 @@ export default function HappyCustomers() {
           prevEl: ".control-left",
         }}
         spaceBetween={30}
-        slidesPerView={isMobile ? 1 : 3}
+        slidesPerView={device != "desktop" ? 1 : 3}
         centeredSlides={false}
         loop={false}
         speed={600}

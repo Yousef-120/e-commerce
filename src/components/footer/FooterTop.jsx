@@ -1,15 +1,15 @@
 import FooterColumn from "./FooterColumn";
 import FooterMainColumn from "./FooterMainColumn";
 import { links } from "../../modules/core/index";
-import useIsMobile from "../../modules/core/components/useIsMobile";
+import useDeviceType from "../../modules/core/components/useDeviceType"
 
 export default function FooterTop() {
-  const isMobile = useIsMobile()
+  const device = useDeviceType()
   return (
     <>
-      {isMobile && <FooterMainColumn />}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-y-8 justify-between md:justify-start md:gap-[114px] pb-[50px] items-center border-b border-[#0000001A] mt-[26px] md:mt-0">
-        {!isMobile && <FooterMainColumn />}
+      {device == "mobile" || device == "tablet" && <FooterMainColumn />}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-y-8 justify-between lg:justify-start lg:gap-[114px] pb-[50px] items-center border-b border-[#0000001A] mt-[26px] md:mt-9 lg:mt-0">
+        {device != "mobile" || device != "tablet" && <FooterMainColumn />}
         {links.map((section, i) => {
           const sectionName = section.sectionName;
           const key = Object.keys(section)[1];

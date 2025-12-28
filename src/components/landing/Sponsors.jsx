@@ -4,20 +4,20 @@ import zara from "../../assets/sponsers/zara.png";
 import gucci from "../../assets/sponsers/gucci.png";
 import prada from "../../assets/sponsers/prada.png";
 import calvinKlein from "../../assets/sponsers/calvinKlein.png";
-import useIsMobile from "../../modules/core/components/useIsMobile";
+import useDeviceType from "../../modules/core/components/useDeviceType";
 
 export default function Sponsors() {
   const sponsorsImages = [versace, zara, gucci, prada, calvinKlein];
-  const isMobile = useIsMobile();
+  const device = useDeviceType();
 
   return (
     <div className="w-full bg-black overflow-hidden py-11 block md:flex justify-center">
-      {isMobile ? (
+      {device != "desktop" ? (
         <motion.div
           className="flex gap-[34px] w-max"
           animate={{ x: ["0%", "-50%"] }}
           transition={{
-            duration: 25, // كل ما تزود الرقم تقل السرعة
+            duration: 25, 
             ease: "linear",
             repeat: Infinity,
           }}

@@ -4,6 +4,10 @@ import payment2 from "../../../assets/payment-methods/payment-2.png";
 import payment3 from "../../../assets/payment-methods/payment-3.png";
 import payment4 from "../../../assets/payment-methods/payment-4.png";
 import payment5 from "../../../assets/payment-methods/payment-5.png";
+import img1 from "../../../assets/dressStyles/img-1.png";
+import img2 from "../../../assets/dressStyles/img-2.png";
+import img3 from "../../../assets/dressStyles/img-3.png";
+import img4 from "../../../assets/dressStyles/img-4.png";
 
 export const navLinks = [
     {linkName: "Home" , linkUrl: "/"},
@@ -152,8 +156,8 @@ export const categories = [
 ]
 
 export const styles = [
-  {name: 'casual' , url: '/'},
-  {name: 'formal' , url: '/'},
-  {name: 'party' , url: '/'},
-  {name: 'gym' , url: '/'},
+  {name: 'casual' , url: '/' , img: img1},
+  {name: 'formal' , url: '/' , img: img2},
+  {name: 'party' , url: '/' , img: img3},
+  {name: 'gym' , url: '/' , img: img4},
 ]

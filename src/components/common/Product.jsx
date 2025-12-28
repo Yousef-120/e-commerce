@@ -3,9 +3,8 @@ import { domain } from "../../modules/core/index";
 import { Link } from "react-router-dom";
 
 export default function Product({ product }) {
-
   return (
-    <Link className="product" to={`/product/${product.documentId}`}>
+    <Link state={{ from: "home" }} className="product" to={`/product/${product.documentId}`}>
       <div className={`img-wrapper bg-[#F0EEED] rounded-[20px] overflow-hidden aspect-square flex items-center justify-center`}>
         <img className={`w-full h-full object-cover`} src={domain + product.mainImg.url} alt="" />
       </div>

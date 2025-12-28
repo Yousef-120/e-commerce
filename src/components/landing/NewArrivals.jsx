@@ -5,14 +5,14 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useProductsByTag } from "../../modules/shop";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import useIsMobile from "../../modules/core/components/useIsMobile";
+import useDeviceType from "../../modules/core/components/useDeviceType";
 
 export default function NewArrivals() {
   const { productsByTag, fetchProductsByTag, loading } = useProductsByTag();
   const tag = "newArrivals";
   const newArrivals = productsByTag[tag] || [];
 
-  const isMobile = useIsMobile()
+  const device = useDeviceType()
 
    useEffect(() => {
     fetchProductsByTag(tag);
@@ -24,7 +24,7 @@ export default function NewArrivals() {
         <h3 className="integral-font text-center font-bold text-[32px] md:text-5xl leading-[100%] tracking-normal">New Arrivals</h3>
 
         {/* Mobile */}
-        {isMobile ? (
+        {device == "mobile" ? (
           <Swiper spaceBetween={15} slidesPerView={1.3} grabCursor={true} className="mt-[55px]">
             {loading
               ? Array(4)
@@ -46,7 +46,7 @@ export default function NewArrivals() {
           </Swiper>
         ) : (
           // Tablet && Lg Screens
-          <div className="products grid grid-cols-4 gap-5 mt-[55px]">
+          <div className="products grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-[55px]">
             {loading
               ? Array(4)
                   .fill()

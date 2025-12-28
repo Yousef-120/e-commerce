@@ -21,10 +21,9 @@ export default function CartPage() {
 
   return (
     <div>
-      <Breadcrumbs />
       <div className="flex justify-center">
         <div className="container">
-          <h3 className="font-bold text-[40px] integral-font mb-6">Your Cart {cartEmpty && <span className="text-red-500 text-3xl">Is Empty</span>}</h3>
+          <h3 className="font-bold text-[32px] lg:text-[40px] integral-font mb-6">Your Cart {cartEmpty && <span className="text-red-500 text-[22px] lg:text-3xl">Is Empty</span>}</h3>
           {loading ? (
             <div className="flex justify-center items-center mt-16 mb-40">
               <Loader />

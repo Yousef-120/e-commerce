@@ -5,6 +5,7 @@ import ProductPage from "./pages/ProductPage";
 import ShopPage from "./pages/ShopPage";
 import ScrollToTop from "./components/common/ScrollToTop";
 import CartPage from "./pages/CartPage";
+import PageNotFound from "./pages/PageNotFound";
 
 export default function App() {
   return (
@@ -24,7 +25,7 @@ export default function App() {
           </Route>
         </Route>
         {/* Error 404 */}
-        <Route path="*" element={<h1>Page Not Found</h1>} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
   );

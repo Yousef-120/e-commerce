@@ -6,8 +6,6 @@ export default function ShopPage() {
   return (
     <div className="flex justify-center mb-40">
       <div className="container">
-        <BreadCrumbs />
-
         <div className="content flex gap-5 justify-between">
           <Filters />
           <Products />

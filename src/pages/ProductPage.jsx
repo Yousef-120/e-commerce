@@ -20,7 +20,6 @@ export default function ProductPage() {
   
   return (
     <>
-      <Breadcrumbs />
       <ProductDetails product={product} loading={loading}/>
       <ProductTabs product={product} />
       <RandomProducts />

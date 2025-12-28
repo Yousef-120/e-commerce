@@ -2,11 +2,11 @@ import { MdOutlineMail } from "react-icons/md";
 
 export default function NewsletterBanner() {
   return (
-    <div className="absolute top-0 -translate-y-1/2 w-[calc(100%-32px)] md:w-full left-1/2 -translate-x-1/2  md:left-1/2 px-6 py-8 md:py-9 md:px-16 rounded-[20px] flex flex-col gap-8 md:grid grid-cols-[7fr_3fr] items-center bg-[#000000] text-[#FFFFFF] z-50">
-      <h4 className="uppercase font-bold text-[32px] md:text-[40px] leading-[35px] md:leading-[45px] integral-font">
+    <div className="absolute top-0 -translate-y-1/2 w-[calc(100%-32px)] left-1/2 -translate-x-1/2  md:left-1/2 px-6 py-8 md:py-9 md:px-16 rounded-[20px] flex flex-col gap-8 lg:grid grid-cols-[7fr_3fr] items-center md:text-center bg-[#000000] text-[#FFFFFF] z-50">
+      <h4 className="uppercase font-bold text-[32px] md:text-[36px] lg:text-[40px] leading-[35px] md:leading-10 lg:leading-[45px] integral-font">
         <span className="inline md:block">STAY UPTO DATE ABOUT </span>OUR LATEST OFFERS
       </h4>
-      <form action="" className="flex flex-col gap-3.5 w-full md:w-auto">
+      <form action="" className="flex flex-col gap-3.5 w-full lg:w-auto">
         <div className="input-div relative h-full">
           <MdOutlineMail className="absolute top-1/2 -translate-y-1/2 text-[#00000066] w-6 h-6 left-4" />
           <input

@@ -40,27 +40,27 @@ export default function OrderSummary() {
         <div className="details mt-6 text-[18px] leading-[100%] mb-6">
           <ul className="list-none flex flex-col gap-5">
             <li className="flex justify-between items-center">
-              <span className="text-[#00000099]">Subtotal</span>
-              <span className="font-bold">${subTotal}</span>
+              <span className="text-[#00000099] text-[16px] lg:text-[20px]">Subtotal</span>
+              <span className="font-bold text-[16px] lg:text-[20px]">${subTotal}</span>
             </li>
             <li className="flex justify-between items-center">
-              <span className="text-[#00000099]">Discount (-{discountRate}%)</span>
-              <span className="font-bold text-[#FF3333]">-${discount}</span>
+              <span className="text-[#00000099] text-[16px] lg:text-[20px]">Discount (-{discountRate}%)</span>
+              <span className="font-bold text-[16px] lg:text-[20px] text-[#FF3333]">-${discount}</span>
             </li>
             <li className="flex justify-between items-center">
-              <span className="text-[#00000099]">Delivery Fee</span>
-              <span className="font-bold">${deliveryFee}</span>
+              <span className="text-[#00000099] text-[16px] lg:text-[20px]">Delivery Fee</span>
+              <span className="font-bold text-[16px] lg:text-[20px]">${deliveryFee}</span>
             </li>
           </ul>
           <Line className={"my-5!"} />
           <div className="flex justify-between items-center">
-            <span className="">Total</span>
-            <span className="font-bold">${total}</span>
+            <span className="text-[20px] lg:text-2xl">Total</span>
+            <span className="font-bold text-[16px] lg:text-[20px]">${total}</span>
           </div>
         </div>
         {/* Promo Code  */}
         <div className="flex gap-3 w-full mb-6">
-          <div className="relative w-[80%]">
+          <div className="relative w-[70%] lg:w-[80%]">
             <MdOutlineDiscount size={22} className="absolute left-4 top-1/2 translate-y-[-50%] text-[#00000066]" />
             <input placeholder="Add promo code" className="rounded-full bg-[#F0F0F0] py-3.5 px-12 placeholder:text-[#00000066] w-full outline-gray-700" type="text" />
           </div>
@@ -72,7 +72,7 @@ export default function OrderSummary() {
               damping: 20,
               mass: 0.8,
             }}
-            className="rounded-full bg-[#000000] py-3 px-4 font-medium text-[16px] leading-[100%] text-[#FFFFFF] w-[20%]"
+            className="rounded-full bg-[#000000] py-3 px-4 font-medium text-[16px] leading-[100%] text-[#FFFFFF] w-[30%] lg:w-[20%]"
           >
             Apply
           </motion.button>

@@ -3,13 +3,13 @@ import { useProductsByTag } from "../../modules/shop";
 import Product from "../common/Product";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import useIsMobile from "../../modules/core/components/useIsMobile";
+import useDeviceType from "../../modules/core/components/useDeviceType";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
 export default function TopSelling() {
   const { productsByTag, fetchProductsByTag, loading } = useProductsByTag();
-  const isMobile = useIsMobile();
+  const device = useDeviceType();
   const tag = "topSelling";
 
   const topSelling = productsByTag[tag] || [];
@@ -24,7 +24,7 @@ export default function TopSelling() {
         <h3 className="integral-font text-center font-bold text-[32px] md:text-5xl leading-[100%] tracking-normal">Top Selling</h3>
 
         {/* Mobile */}
-        {isMobile ? (
+        {device == "mobile" ? (
           <Swiper spaceBetween={15} slidesPerView={1.3} grabCursor={true} className="mt-[55px]">
             {loading
               ? Array(4)
@@ -46,7 +46,7 @@ export default function TopSelling() {
           </Swiper>
         ) : (
           // Tablet && Lg Screens
-          <div className="products grid grid-cols-4 gap-5 mt-[55px]">
+          <div className="products grid lg:grid-cols-4 md:grid-cols-2 gap-5 mt-[55px]">
             {loading
               ? Array(4)
                   .fill()

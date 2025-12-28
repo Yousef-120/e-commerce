@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 export default function ShopProduct({ product }) {
   return (
-    <Link className="product" to={`/product/${product.documentId}`}>
+    <div className="product">
       <div className="img-wrapper bg-[#F0EEED] rounded-[20px] overflow-hidden aspect-square flex items-center justify-center">
         <img className="w-full h-full object-cover" src={domain + product.mainImg.url} alt="" />
       </div>
@@ -30,6 +30,6 @@ export default function ShopProduct({ product }) {
           <span className="text-[#FF3333] text-[10px] lg:text-[12px] font-medium">-{product.discount}%</span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
