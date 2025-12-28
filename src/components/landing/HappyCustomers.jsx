@@ -16,8 +16,8 @@ export default function HappyCustomers() {
     <div className="w-full py-20 overflow-visible">
       <div className="w-full relative flex justify-center mb-16">
         <div className="content container flex justify-between items-center">
-          {device == "desktop" && <p></p>}
-          <h5 className="integral-font uppercase font-bold text-[32px] md:text-5xl md:text-center leading-9 md:leading-[100%] tracking-normal">OUR HAPPY CUSTOMERS</h5>
+          
+          <h5 className="integral-font uppercase font-bold text-[32px] md:text-[40px] lg:text-5xl md:text-center leading-9 lg:leading-[100%] tracking-normal">OUR HAPPY CUSTOMERS</h5>
           <div className="controls flex items-center gap-3">
             <button className="control-left cursor-pointer">
               <HiOutlineArrowSmLeft size="28px" />
@@ -35,7 +35,7 @@ export default function HappyCustomers() {
           nextEl: ".control-right",
           prevEl: ".control-left",
         }}
-        spaceBetween={30}
+        spaceBetween={20}
         slidesPerView={device != "desktop" ? 1 : 3}
         centeredSlides={false}
         loop={false}
@@ -43,8 +43,8 @@ export default function HappyCustomers() {
         className="container overflow-visible cursor-grab active:cursor-grabbing select-none"
       >
         {happyCustomers.map((customer, i) => (
-          <SwiperSlide key={i} className="overflow-visible px-4 md:px-0">
-            <div className="bg-white rounded-3xl px-8 py-7 shadow-sm h-60 flex flex-col border border-[#0000001A]">
+          <SwiperSlide key={i} className="overflow-hidden px-4 lg:px-0">
+            <div className="bg-white rounded-3xl px-8 py-7 shadow-sm h-60 flex flex-col border border-[#0000001A] overflow-hidden">
               <div className="stars flex gap-2 mb-[15px]">
                 {[...Array(5)].map((_, index) => (
                   <IoStar key={index} className="text-[#FFC633] text-[24px]" />
@@ -57,7 +57,7 @@ export default function HappyCustomers() {
                 </div>
               </div>
               <div className="customer-comment mt-3 ">
-                <p className="text-[#00000099] text-[14px] md:text-[18px] leading-5 md:leading-[22px]">{customer.comment}</p>
+                <p className="text-[#00000099] overflow-hidden text-[14px] md:text-[18px] leading-5 md:leading-[22px]">{customer.comment}</p>
               </div>
             </div>
           </SwiperSlide>
