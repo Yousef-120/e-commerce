@@ -5,8 +5,8 @@ import star from "../../assets/star.png";
 export default function Hero() {
   return (
     <div className="w-full bg-[#F2F0F1] flex justify-center">
-      <div className="container lg:flex justify-between items-center text-[#000000]">
-        <div className="hero-info">
+      <div className="container lg:flex justify-between text-[#000000]">
+        <div className="hero-info content-center">
           <h1 className="uppercase integral-font font-bold text-[38px] md:text-[48px] lg:text-[64px] leading-11 md:leading-12 lg:leading-16 mt-10 lg:mt-0">
             <span className="block">find clothes</span>
             <span className="block">that matches</span>
@@ -63,9 +63,9 @@ export default function Hero() {
             </div>
           </div>
         </div>
-        <div className="img-wrapper relative">
+        <div className="img-wrapper relative content-end">
           <img className="absolute left-0 w-14 h-14 top-1/2 -translate-y-1/2" src={star} alt="" />
-          <img src={hero} alt="hero img" className="max-h-[663px]" />
+          <img src={hero} alt="hero img" className="max-h-[650px]" />
           <img className="absolute right-0 w-[90px] h-[90px] top-18" src={star} alt="" />
         </div>
       </div>

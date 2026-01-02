@@ -1,10 +1,27 @@
 import { IoStar } from "react-icons/io5";
 import { domain } from "../../modules/core/index";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function ShopProduct({ product }) {
+  const [priceAfterDiscount, setPriceAfterDiscount] = useState();
+  const [discountAvailable, setDiscountAvailable] = useState();
+
+  const handleDiscount = () => {
+    if (product?.discount) {
+      setDiscountAvailable(true);
+      const discount = product.discount;
+      setPriceAfterDiscount(product.price - (discount / 100) * product.price);
+    } else {
+      setDiscountAvailable(false);
+    }
+  };
+  useEffect(() => {
+    handleDiscount();
+  }, [product]);
+
   return (
-    <div className="product">
+    <Link to={`product/${product.documentId}`} className="product">
       <div className="img-wrapper bg-[#F0EEED] rounded-[20px] overflow-hidden aspect-square flex items-center justify-center">
         <img className="w-full h-full object-cover" src={domain + product.mainImg.url} alt="" />
       </div>
@@ -23,13 +40,15 @@ export default function ShopProduct({ product }) {
       </div>
 
       <div className="pricing flex gap-[5px] lg:gap-2.5 mt-1 lg:mt-2 items-center">
-        <span className="final-price text-[#000000] text-[20px] lg:text-2xl font-bold">${product.price}</span>
-        <span className="original-price text-[#00000066] text-[20px] lg:text-2xl font-bold">${product.originalPrice}</span>
+        <span className="final-price text-[#000000] text-[20px] lg:text-2xl font-bold">${discountAvailable ? priceAfterDiscount : product.price}</span>
+        {discountAvailable && <span className="original-price text-[#00000066] text-[20px] lg:text-2xl font-bold">${product.price}</span>}
 
-        <div className="discount bg-[#FF33331A] py-1.5 px-3.5 rounded-full flex justify-center items-center">
-          <span className="text-[#FF3333] text-[10px] lg:text-[12px] font-medium">-{product.discount}%</span>
-        </div>
+        {discountAvailable && (
+          <div className="discount bg-[#FF33331A] py-1.5 px-3.5 rounded-full flex justify-center items-center">
+            <span className="text-[#FF3333] text-[10px] lg:text-[12px] font-medium">-{product.discount}%</span>
+          </div>
+        )}
       </div>
-    </div>
+    </Link>
   );
 }

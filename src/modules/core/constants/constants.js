@@ -8,14 +8,33 @@ import img1 from "../../../assets/dressStyles/img-1.png";
 import img2 from "../../../assets/dressStyles/img-2.png";
 import img3 from "../../../assets/dressStyles/img-3.png";
 import img4 from "../../../assets/dressStyles/img-4.png";
+import versace from "../../../assets/sponsers/versace.png";
+import zara from "../../../assets/sponsers/zara.png";
+import gucci from "../../../assets/sponsers/gucci.png";
+import prada from "../../../assets/sponsers/prada.png";
+import calvinKlein from "../../../assets/sponsers/calvinKlein.png";
+
+export const brands = [
+  { name: "versace", img: versace },
+  { name: "zara", img: zara },
+  { name: "gucci", img: gucci },
+  { name: "prada", img: prada },
+  { name: "calvinKlein", img: calvinKlein },
+];
 
 export const navLinks = [
-    {linkName: "Home" , linkUrl: "/"},
-    {linkName: "Shop" , linkUrl: "/shop"},
-    {linkName: "On Sale" , linkUrl: "/"},
-    {linkName: "New Arrivals" , linkUrl: "/"},
-    {linkName: "Brands" , linkUrl: "/"}
-  ];
+  { linkName: "Home", linkUrl: "/" },
+  { linkName: "Shop", linkUrl: "/shop" },
+  { linkName: "On Sale", linkUrl: "/onSale" },
+  { linkName: "New Arrivals", linkUrl: "/newArrivals" },
+  { linkName: "Brands", linkUrl: "/brands" },
+];
+
+export const tags = [
+  { name: "New Arrivals", path: "/newArrivals" , onHome: true , heading: "New Arrivals" , id: 1},
+  { name: "Top Selling", path: "/topSelling" , onHome: true , heading: "Top Selling" , id: 2},
+  { name: "On Sale", path: "/onSale" , onHome: false , heading: "On Sale" , id: 3},
+];
 
 export const links = [
   {
@@ -109,55 +128,53 @@ export const customersReviews = [
     stars: 4.5,
     name: "Samantha D.",
     comment: `"I absolutely love this t-shirt! The design is unique and the fabric feels so comfortable. As a fellow designer, I appreciate the attention to detail. It's become my favorite go-to shirt."`,
-    date: "August 15, 2023"
+    date: "August 15, 2023",
   },
   {
     stars: 4,
     name: "Alex M.",
     comment: `"The t-shirt exceeded my expectations! The colors are vibrant and the print quality is top-notch. Being a UI/UX designer myself, I'm quite picky about aesthetics, and this t-shirt definitely gets a thumbs up from me."`,
-    date: "August 16, 2023"
+    date: "August 16, 2023",
   },
   {
     stars: 4.5,
     name: "Ethan R.",
     comment: `"This t-shirt is a must-have for anyone who appreciates good design. The minimalistic yet stylish pattern caught my eye, and the fit is perfect. I can see the designer's touch in every aspect of this shirt."`,
-    date: "August 17, 2023"
+    date: "August 17, 2023",
   },
   {
     stars: 4,
     name: "Olivia P.",
     comment: `"As a UI/UX enthusiast, I value simplicity and functionality. This t-shirt not only represents those principles but also feels great to wear. It's evident that the designer poured their creativity into making this t-shirt stand out."`,
-    date: "August 18, 2023"
+    date: "August 18, 2023",
   },
   {
     stars: 4,
     name: "Liam K.",
     comment: `"This t-shirt is a fusion of comfort and creativity. The fabric is soft, and the design speaks volumes about the designer's skill. It's like wearing a piece of art that reflects my passion for both design and fashion."`,
-    date: "August 19, 2023"
+    date: "August 19, 2023",
   },
   {
     stars: 4.5,
     name: "Ava H.",
     comment: `"I'm not just wearing a t-shirt; I'm wearing a piece of design philosophy. The intricate details and thoughtful layout of the design make this shirt a conversation starter."`,
-    date: "August 20, 2023"
+    date: "August 20, 2023",
   },
 ];
 
-export const colors = [
-  "#00C12B","#F50606","#F5DD06","#F57906","#06CAF5","#063AF5","#7D06F5","#F506A4","#FFFFFF","#000000"
-]
+export const colors = ["#00C12B", "#F50606", "#F5DD06", "#F57906", "#06CAF5", "#063AF5", "#7D06F5", "#F506A4", "#FFFFFF", "#000000"];
 
 export const categories = [
-  {name: 't-shirts' , url: '/'},
-  {name: 'shorts' , url: '/'},
-  {name: 'shirts' , url: '/'},
-  {name: 'hoodie' , url: '/'},
-  {name: 'jeans' , url: '/'},
-]
+  { name: "t-shirts", url: "/" },
+  { name: "shorts", url: "/" },
+  { name: "shirts", url: "/" },
+  { name: "hoodie", url: "/" },
+  { name: "jeans", url: "/" },
+];
 
 export const styles = [
-  {name: 'casual' , url: '/' , img: img1},
-  {name: 'formal' , url: '/' , img: img2},
-  {name: 'party' , url: '/' , img: img3},
-  {name: 'gym' , url: '/' , img: img4},
-]
+  { name: "casual", url: "/", img: img1 },
+  { name: "formal", url: "/", img: img2 },
+  { name: "party", url: "/", img: img3 },
+  { name: "gym", url: "/", img: img4 },
+];

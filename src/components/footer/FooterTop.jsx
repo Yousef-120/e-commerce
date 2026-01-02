@@ -7,9 +7,9 @@ export default function FooterTop() {
   const device = useDeviceType()
   return (
     <>
-      {device == "mobile" || device == "tablet" && <FooterMainColumn />}
+      {device != "desktop" && <FooterMainColumn />}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-y-8 justify-between lg:justify-start lg:gap-[114px] pb-[50px] items-center border-b border-[#0000001A] mt-[26px] md:mt-9 lg:mt-0">
-        {device != "mobile" || device != "tablet" && <FooterMainColumn />}
+        {device == "desktop" && <FooterMainColumn />}
         {links.map((section, i) => {
           const sectionName = section.sectionName;
           const key = Object.keys(section)[1];

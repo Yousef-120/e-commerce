@@ -4,8 +4,8 @@ import NewsletterBanner from "./NewsletterBanner";
 
 export default function Footer() {
   return (
-    <div className="w-full flex justify-center bg-[#F0F0F0] mt-[184px] md:mt-[90px]">
-      <div className="container pt-[196px] md:pt-[164px] pb-20 relative">
+    <div className="w-full flex justify-center bg-[#F0F0F0] mt-[200px]">
+      <div className="container pt-[196px] lg:pt-[164px] pb-20 relative">
         <NewsletterBanner />
         <div className="footer-content">
           <FooterTop />

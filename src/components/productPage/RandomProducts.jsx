@@ -5,14 +5,14 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useAllProducts } from "../../modules/shop";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import useIsMobile from "../../modules/core/components/useIsMobile";
+import useDeviceType from "../../modules/core/components/useDeviceType";
 
 export default function RandomProducts() {
   const { products, fetchProducts, loading } = useAllProducts();
   const secName = "You might also like";
   const productsFiltered = products.slice(0,4) || [];
 
-  const isMobile = useIsMobile()
+  const device = useDeviceType()
 
    useEffect(() => {
     fetchProducts();
@@ -24,7 +24,7 @@ export default function RandomProducts() {
         <h3 className="integral-font text-center font-bold text-[32px] md:text-5xl leading-[100%] tracking-normal capitalize lg:uppercase">{secName}</h3>
 
         {/* Mobile */}
-        {isMobile ? (
+        {device == "mobile" ? (
           <Swiper spaceBetween={15} slidesPerView={1.3} grabCursor={true} className="mt-[55px]">
             {loading
               ? Array(4)
@@ -46,7 +46,7 @@ export default function RandomProducts() {
           </Swiper>
         ) : (
           // Tablet && Lg Screens
-          <div className="products grid grid-cols-4 gap-5 mt-[55px]">
+          <div className="products grid md:grid-cols-2 lg:grid-cols-4 gap-5 mt-[55px]">
             {loading
               ? Array(4)
                   .fill()

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa6";
+import useDeviceType from "../../modules/core/components/useDeviceType"
 
 export default function Pagination() {
   const [tabActive, setTabActive] = useState(0);
-  const tabs = 6;
+  const device = useDeviceType()
+  const tabs = device != "mobile" ? 6 : 3;
 
   const NavigationBtnClasses = `
     border border-[#0000001A] rounded-lg py-2 px-3.5 text-[14px] leading-5 font-medium

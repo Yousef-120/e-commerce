@@ -30,20 +30,38 @@ export default function Header() {
                   (link, i) =>
                     link.linkName !== "Home" && (
                       <li key={i}>
-                        <Link to={link.linkUrl}>{link.linkName}</Link>
+                        <Link
+                          state={{
+                            breadcrumbs: [
+                              { label: "Home", path: "/" },
+                              { label: link.linkName, path: link.linkUrl },
+                            ],
+                          }}
+                          to={link.linkUrl}
+                        >
+                          {link.linkName}
+                        </Link>
                       </li>
                     )
                 )}
               </ul>
             </nav>
           </div>
-          <div className="md:w-3/5 lg:w-1/2 flex gap-10 items-center">
+          <div className="md:w-3/5 lg:w-[45%] flex gap-10 items-center">
             <input className="w-full outline-0 py-3 px-4 rounded-full bg-[#F0F0F0] hidden md:block" type="search" name="" id="" placeholder="Search for products..." />
             <div className="actions flex gap-3.5">
               <Link to="/" className="block md:hidden">
                 <IoSearch className="w-6 h-6" />
               </Link>
-              <Link to="/cart">
+              <Link
+                state={{
+                  breadcrumbs: [
+                    { label: "Home", path: "/" },
+                    { label: "Cart", path: "/cart" },
+                  ],
+                }}
+                to="/cart"
+              >
                 <FiShoppingCart className="w-6 h-6" />
               </Link>
               <Link to="/profile">

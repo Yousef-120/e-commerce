@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import { useUserStore } from "../modules/shop/store/useUserStore";
 
 export default function TopBanner() {
-  const [bannerActive, setBannerActive] = useState(true);
+  const [bannerActive, setBannerActive] = useState();
+  const { checkTokenServer } = useUserStore();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    setBannerActive(true);
+    if (!token) {
+      setBannerActive(true);
+    } else {
+      setBannerActive(false);
+    }
   }, []);
+
   return (
     <div
       className={`w-full bg-[#000000] text-white flex justify-center items-center overflow-hidden transition-all duration-500 ease-in-out`}
@@ -20,7 +28,7 @@ export default function TopBanner() {
         <p className="hidden md:block"></p>
         <p className="text-[14px] text-center md:text-start md:text-[16px]">
           Sign up and get 20% off to your first order.{" "}
-          <Link className="font-medium underline" to="/">
+          <Link className="font-medium underline" to="/signUp">
             Sign Up Now
           </Link>
         </p>

@@ -59,3 +59,13 @@ button
 .hide-scrollbar {
   scrollbar-width: none;
 }
+.hero-info {
+  @media screen and (min-width: 1024px) and (max-width: 1110px) {
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+}
+body.swal2-shown {
+  padding-right: 0 !important;
+  overflow: auto !important;
+}

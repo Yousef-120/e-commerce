@@ -9,6 +9,7 @@ import Line from "../ui/Line";
 import QtySelector from "../common/QtySelector";
 import { useStore } from "../../modules/shop/store/useStore";
 import SmallLoader from "../ui/smallLoader";
+import { toast, Bounce } from "react-toastify";
 
 export default function ProductDetails({ product, loading }) {
   const [mainImg, setMainImg] = useState();
@@ -16,6 +17,8 @@ export default function ProductDetails({ product, loading }) {
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setselectedSize] = useState("");
   const [selectedQty, setSelectedQty] = useState(1);
+  const [priceAfterDiscount, setPriceAfterDiscount] = useState();
+  const [discountAvailable, setDiscountAvailable] = useState();
 
   const isLoading = loading || !product;
   const { addToCart, isInCart } = useStore();
@@ -31,19 +34,46 @@ export default function ProductDetails({ product, loading }) {
       setSelectedProductOptions(product.documentId, "size", selectedSize);
       setSelectedProductOptions(product.documentId, "qty", selectedQty);
       addToCart(product);
+      const toastId = toast.loading("Adding product to cart...");
       setTimeout(() => {
         setBtnLoading(false);
         setSelectedQty(1);
+        toast.update(toastId, {
+          render: "Added to cart successfully",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
       }, 1000);
     } else {
-      alert("You must complete product information order");
+      toast.warn("You must complete product information order", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
+  };
+  const handleDiscount = () => {
+    if (product?.discount) {
+      setDiscountAvailable(true);
+      const discount = product.discount;
+      setPriceAfterDiscount(product.price - (discount / 100) * product.price);
+    } else {
+      setDiscountAvailable(false);
     }
   };
 
   useEffect(() => {
     product && setMainImg(domain + product.mainImg.url);
+    handleDiscount();
   }, [product]);
-  
+
   return (
     <div className="w-full flex justify-center mb-[118px]">
       <div className="container flex flex-col lg:flex-row gap-10 lg:items-stretch">
@@ -108,14 +138,16 @@ export default function ProductDetails({ product, loading }) {
                 </div>
 
                 <div className="pricing flex flex-wrap gap-3 items-center mb-5">
-                  <span className="current-price font-bold text-[28px] sm:text-[32px] text-[#000000]">${product.price}</span>
-                  <span className="original-price font-bold text-[28px] sm:text-[32px] text-[#0000004D]">${product.originalPrice}</span>
-                  <div className="discount px-3.5 py-1.5 bg-[#FF33331A] rounded-full">
-                    <span className="text-[#FF3333] text-[16px] leading-[100%] tracking-normal">{product.discount}%</span>
-                  </div>
+                  <span className="font-bold text-[28px] sm:text-[32px] text-[#000000]">${discountAvailable ? priceAfterDiscount : product.price}</span>
+                  {discountAvailable && <span className="font-bold text-[28px] sm:text-[32px] text-[#0000004D] line-through">${product.price}</span>}
+                  {discountAvailable && (
+                    <div className="discount px-3.5 py-1.5 bg-[#FF33331A] rounded-full">
+                      <span className="text-[#FF3333] text-[16px] leading-[100%] tracking-normal">{product.discount}%</span>
+                    </div>
+                  )}
                 </div>
 
-                <p className="text-[#00000099] leading-[22px] tracking-normal">{product.description}</p>
+                <p className="text-[#00000099] leading-[22px] tracking-normal">-{product.description}</p>
               </div>
 
               {/* Actions */}
@@ -127,8 +159,8 @@ export default function ProductDetails({ product, loading }) {
                   <span className="text-[#00000099]">Select Color</span>
                   <div className="flex gap-4 flex-wrap">
                     {product.colors.map((color, index) => (
-                      <div key={index} onClick={() => setSelectedColor(color.color)} className="w-[37px] h-[37px] rounded-full cursor-pointer relative" style={{ backgroundColor: color.color }}>
-                        {selectedColor === color.color && <MdCheck size={22} className="absolute inset-0 m-auto w-5 h-5 text-white" />}
+                      <div key={index} onClick={() => setSelectedColor(color.name)} className="w-[37px] h-[37px] rounded-full cursor-pointer relative" style={{ backgroundColor: color.hex }}>
+                        {selectedColor === color.name && <MdCheck size={22} className="absolute inset-0 m-auto w-5 h-5 text-white" />}
                       </div>
                     ))}
                   </div>

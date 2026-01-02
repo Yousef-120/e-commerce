@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { FiSliders } from "react-icons/fi";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
-import ShopProduct from "./ShopProduct";
+import Product from "../common/Product";
 import { useAllProducts } from "../../modules/shop";
 import { useStore } from "../../modules/shop/store/useStore";
-import useIsMobile from "../../modules/core/components/useIsMobile";
-import Loader from "../ui/Loader";
+import useDeviceType from "../../modules/core/components/useDeviceType";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Line from "../ui/Line";
@@ -13,12 +12,12 @@ import Pagination from "./Pagination";
 
 export default function Products() {
   const { setFilterActive } = useStore();
-  const { applyingFilters, setApplyingFilters } = useStore();
+  const { applyingFilters } = useStore();
   const { products, loading, fetchProducts } = useAllProducts();
-  const isMobile = useIsMobile();
+  const device = useDeviceType();
   const [tagsOpened, setTagsOpened] = useState(false);
   const dropdownRef = useRef(null);
-  
+
   useEffect(() => {
     fetchProducts();
     const handleClickOutside = (e) => {
@@ -31,13 +30,13 @@ export default function Products() {
   }, []);
 
   return (
-    <div className="w-full lg:w-[78%]">
+    <div className="w-full lg:w-[75%]">
       <div className={`flex justify-between items-center mb-4 ${applyingFilters && "hidden"}`}>
         <div className={`flex items-center gap-2 justify-baseline lg:justify-between w-full`}>
           <span className="text-2xl lg:text-[32px] font-bold text-[#000000] leading-[100%]">Casual</span>
           <div className="info flex items-center gap-3">
             <span className="text-[14px] text-[#00000099]">Showing 1-10 of 100 Products</span>
-            {!isMobile && (
+            {device == "desktop" && (
               <div className="flex items-center gap-1">
                 <span className="text-[14px] text-[#00000099]">Sort By:</span>
                 <div ref={dropdownRef} className="relative">
@@ -61,36 +60,41 @@ export default function Products() {
           </div>
         </div>
 
-        {isMobile && (
+        {device != "desktop" && (
           <button onClick={() => setFilterActive(true)} className="rounded-full p-3 bg-[#F0F0F0]">
             <FiSliders size={20} />
           </button>
         )}
       </div>
 
-      {!applyingFilters ? (
-        <div>
-          <div className="content grid grid-cols-2 lg:grid-cols-4 gap-x-3.5 gap-y-6 lg:gap-x-5 lg:gap-y-9">
-            {loading
-              ? Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="product">
-                    <Skeleton height={200} borderRadius={20} />
-                    <Skeleton width="80%" className="mt-3" />
-                    <Skeleton width="60%" />
-                    <Skeleton width="40%" />
-                  </div>
-                ))
-              : products && products.map((product, i) => <ShopProduct key={i} product={product} />)}
-          </div>
-          <Line className={"mt-8 mb-5"} />
+      <div>
+        <div className="content grid grid-cols-2 lg:grid-cols-3 gap-x-3.5 gap-y-6 lg:gap-x-5 lg:gap-y-9">
+          {loading
+            ? Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="product">
+                  <Skeleton height={200} borderRadius={20} />
+                  <Skeleton width="80%" className="mt-3" />
+                  <Skeleton width="60%" />
+                  <Skeleton width="40%" />
+                </div>
+              ))
+            : products &&
+              products.map((product, i) => (
+                <Product
+                  variant="shop"
+                  key={i}
+                  product={product}
+                  breadcrumbs={[
+                    { label: "Home", path: "/" },
+                    { label: "Shop", path: `/shop` },
+                  ]}
+                />
+              ))}
+        </div>
+        <Line className={"mt-8 mb-5"} />
 
-          <Pagination />
-        </div>
-      ) : (
-        <div className="flex justify-center items-center h-1/2">
-          <Loader />
-        </div>
-      )}
+        <Pagination />
+      </div>
     </div>
   );
 }

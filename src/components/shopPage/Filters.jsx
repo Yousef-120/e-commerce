@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { MdCheck } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import useIsMobile from "../../modules/core/components/useIsMobile";
+import useDeviceType from "../../modules/core/components/useDeviceType";
 import { useStore } from "../../modules/shop/store/useStore";
 import { useAllSizes } from "../../modules/shop";
 
@@ -15,16 +15,16 @@ export default function Filters() {
   const { selectedColor, setSelectedColor } = useStore();
   const { selectedSize, setSelectedSize } = useStore();
   const { filterActive, setFilterActive } = useStore();
-  const { selectedFilterOptions, setSelectedFilterOptions } = useStore();
+  const { setSelectedFilterOptions } = useStore();
   const { applyingFilters, setApplyingFilters } = useStore();
-  const [btnDisabled, setBtnDisabled] = useState();
   const { sizes, fetchSizes } = useAllSizes();
+  const isFiltered = useStore((state) => state.isFiltered());
 
   const [openPrice, setOpenPrice] = useState(true);
   const [openColors, setOpenColors] = useState(true);
   const [openSizes, setOpenSizes] = useState(true);
   const [openStyles, setOpenStyles] = useState(true);
-  const isMobile = useIsMobile();
+  const device = useDeviceType();
 
   useEffect(() => {
     fetchSizes();
@@ -39,7 +39,7 @@ export default function Filters() {
   }, [filterActive]);
 
   const selectColor = (color) => {
-    if (applyingFilters) return; // منع التغيير أثناء التطبيق
+    if (applyingFilters) return;
     selectedColor === color ? setSelectedColor("") : setSelectedColor(color);
   };
 
@@ -49,32 +49,32 @@ export default function Filters() {
   };
 
   const applyFilter = () => {
-    if (applyingFilters) return;
+    if (applyingFilters || isFiltered) return;
+
     setApplyingFilters(true);
     setSelectedFilterOptions({ color: selectedColor, size: selectedSize });
     setFilterActive(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
-    setTimeout(() => {
-      setBtnDisabled(true);
-    }, 500);
   };
 
   const buttonProps = {
-    disabled: btnDisabled,
-    style: { cursor: applyingFilters ? "not-allowed" : "pointer" },
-    className: `p-4 bg-[#000000] rounded-full text-white font-medium w-full active:bg-[#000000e5] transition-color duration-75 ${applyingFilters ? "opacity-50" : ""}`,
+    disabled: applyingFilters || isFiltered,
+    style: {
+      cursor: applyingFilters || isFiltered ? "not-allowed" : "pointer",
+    },
+    className: `p-4 bg-[#000000] rounded-full text-white font-medium w-full active:bg-[#000000e5] transition-color duration-75 ${applyingFilters || isFiltered ? "opacity-50" : ""}`,
   };
 
   return (
     <div
-      className={`w-full lg:w-[22%] bg-[#ffffff] lg:bg-transparent h-[84vh] lg:h-fit overflow-y-scroll lg:overflow-y-auto border border-[#0000001A] pt-5 pb-7 px-6 rounded-[20px] fixed lg:static bottom-0 left-0 z-50 transition-all duration-300 ease-in-out ${
+      className={`w-full lg:w-[25%] bg-[#ffffff] lg:bg-transparent h-[84vh] lg:h-fit overflow-y-scroll lg:overflow-y-auto border border-[#0000001A] pt-5 pb-7 px-6 rounded-[20px] fixed lg:static bottom-0 left-0 z-50 transition-all duration-300 ease-in-out ${
         filterActive ? "translate-y-0 opacity-100 pointer-events-auto" : "translate-y-full opacity-0 pointer-events-none"
       } lg:translate-y-0 lg:opacity-100 lg:pointer-events-auto`}
     >
       {/* Header */}
       <div className="head flex justify-between items-center">
         <span className="font-bold text-[20px] leading-[100%] text-[#000000]">Filters</span>
-        {isMobile ? (
+        {device != "desktop" ? (
           <button onClick={() => setFilterActive(false)}>
             <IoClose color="#00000066" size={28} />
           </button>

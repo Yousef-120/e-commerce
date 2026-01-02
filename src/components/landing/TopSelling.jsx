@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useProductsByTag } from "../../modules/shop";
 import Product from "../common/Product";
 import Skeleton from "react-loading-skeleton";
@@ -6,21 +6,27 @@ import "react-loading-skeleton/dist/skeleton.css";
 import useDeviceType from "../../modules/core/components/useDeviceType";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { Link, useLocation } from "react-router-dom";
 
 export default function TopSelling() {
   const { productsByTag, fetchProductsByTag, loading } = useProductsByTag();
   const device = useDeviceType();
-  const tag = "topSelling";
-
+  const tag = "Top Selling";
+  const location = useLocation();
   const topSelling = productsByTag[tag] || [];
+  const [isInPage, setIsInPage] = useState();
 
   useEffect(() => {
     fetchProductsByTag(tag);
   }, [fetchProductsByTag, tag]);
 
+  useEffect(() => {
+    location.pathname == "topSelling" ? setIsInPage(true) : setIsInPage(false);
+  }, []);
+
   return (
     <div className="w-full flex justify-center">
-      <div className="container pt-[72px] pb-16 border-b border-[#0000001A]">
+      <div className={`container pt-[72px] ${!isInPage && "pb-16 border-b border-[#0000001A"}`}>
         <h3 className="integral-font text-center font-bold text-[32px] md:text-5xl leading-[100%] tracking-normal">Top Selling</h3>
 
         {/* Mobile */}
@@ -64,7 +70,9 @@ export default function TopSelling() {
         )}
 
         <div className="btn-div w-full flex justify-center mt-9">
-          <button className=" w-full md:w-auto rounded-full py-[15px] px-20 border border-[#0000001A] text-[#000000] cursor-pointer hover:scale-105 transition-transform duration-300">View All</button>
+          <Link to={`/topSelling`} className=" w-full md:w-auto rounded-full py-[15px] px-20 border border-[#0000001A] text-[#000000] cursor-pointer hover:scale-105 transition-transform duration-300">
+            View All
+          </Link>
         </div>
       </div>
     </div>
