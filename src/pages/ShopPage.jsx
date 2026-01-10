@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import Filters from "../components/shopPage/Filters";
-import Products from "../components/ShopPage/products";
+import Products from "../components/ShopPage/Products";
 import Loader from "../components/ui/Loader";
 import { useStore } from "../modules/shop/store/useStore";
 import { useLocation } from "react-router-dom";
