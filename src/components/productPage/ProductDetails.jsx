@@ -8,7 +8,7 @@ import { domain } from "../../modules/core";
 import Line from "../ui/Line";
 import QtySelector from "../common/QtySelector";
 import { useStore } from "../../modules/shop/store/useStore";
-import SmallLoader from "../ui/smallLoader";
+import SmallLoader from "../ui/SmallLoader";
 import { toast, Bounce } from "react-toastify";
 import useCheckAuth from "../../modules/core/components/useCheckAuth";
 
