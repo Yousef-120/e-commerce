@@ -10,6 +10,7 @@ import QtySelector from "../common/QtySelector";
 import { useStore } from "../../modules/shop/store/useStore";
 import SmallLoader from "../ui/smallLoader";
 import { toast, Bounce } from "react-toastify";
+import useCheckAuth from "../../modules/core/components/useCheckAuth";
 
 export default function ProductDetails({ product, loading }) {
   const [mainImg, setMainImg] = useState();

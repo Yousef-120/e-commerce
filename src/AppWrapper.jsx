@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useUserStore } from "./modules/shop/store/useUserStore";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import MainLayout from "./Layouts/MainLayout";
 import AuthLayout from "./Layouts/AuthLayout";
 import HomePage from "./pages/HomePage";
@@ -16,35 +16,11 @@ import OnSalePage from "./pages/OnSalePage";
 import Brands from "./pages/Brands";
 import ScrollToTop from "./components/common/ScrollToTop";
 import { Routes, Route } from "react-router-dom";
-import Swal from "sweetalert2";
 import { tags } from "./modules/core";
+import useCheckAuth from "./modules/core/components/useCheckAuth";
 
 export default function AppWrapper() {
-  const { checkTokenServer } = useUserStore();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const verifyUser = async () => {
-      const token = localStorage.getItem("token");
-
-      if (token) {
-        const valid = await checkTokenServer();
-        if (!valid) {
-          navigate("/signIn");
-        }
-      }
-
-      const userLogged = sessionStorage.getItem("userLogged");
-      const userSignedUp = sessionStorage.getItem("userSignedUp");
-
-      if (userLogged || userSignedUp) {
-        sessionStorage.removeItem("userSignedUp");
-        sessionStorage.removeItem("userLogged");
-      }
-    };
-
-    verifyUser();
-  }, [checkTokenServer, navigate]);
+  useCheckAuth()
 
   return (
     <>

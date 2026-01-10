@@ -10,14 +10,14 @@ import useDeviceType from "../../modules/core/components/useDeviceType";
 export default function RandomProducts() {
   const { products, fetchProducts, loading } = useAllProducts();
   const secName = "You might also like";
-  const productsFiltered = products.slice(0,4) || [];
+  const productsFiltered = products.slice(0, 4) || [];
 
-  const device = useDeviceType()
+  const device = useDeviceType();
 
-   useEffect(() => {
+  useEffect(() => {
     fetchProducts();
   }, [fetchProducts, secName]);
-  
+
   return (
     <div className="w-full flex justify-center">
       <div className="container mt-16 mb-24">
@@ -59,7 +59,16 @@ export default function RandomProducts() {
                       </div>
                     </div>
                   ))
-              : productsFiltered.map((product, i) => <Product key={i} product={product} />)}
+              : productsFiltered.map((product, i) => (
+                  <Product
+                    key={i}
+                    product={product}
+                    breadcrumbs={[
+                      { label: "Home", path: "/" },
+                      { label: "Shop", path: "/shop" },
+                    ]}
+                  />
+                ))}
           </div>
         )}
       </div>

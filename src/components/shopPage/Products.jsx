@@ -5,10 +5,9 @@ import Product from "../common/Product";
 import { useAllProducts } from "../../modules/shop";
 import { useStore } from "../../modules/shop/store/useStore";
 import useDeviceType from "../../modules/core/components/useDeviceType";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import Line from "../ui/Line";
 import Pagination from "./Pagination";
+import ProductSkeleton from "../common/ProductSkeleton";
 
 export default function Products() {
   const { setFilterActive } = useStore();
@@ -71,12 +70,7 @@ export default function Products() {
         <div className="content grid grid-cols-2 lg:grid-cols-3 gap-x-3.5 gap-y-6 lg:gap-x-5 lg:gap-y-9">
           {loading
             ? Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="product">
-                  <Skeleton height={200} borderRadius={20} />
-                  <Skeleton width="80%" className="mt-3" />
-                  <Skeleton width="60%" />
-                  <Skeleton width="40%" />
-                </div>
+                <ProductSkeleton key={i}/>
               ))
             : products &&
               products.map((product, i) => (

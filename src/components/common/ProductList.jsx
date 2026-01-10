@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Product from "./Product";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { useProductsByTag } from "../../modules/shop";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import useDeviceType from "../../modules/core/components/useDeviceType";
 import { Link, useLocation } from "react-router-dom";
+import ProductSkeleton from "./ProductSkeleton";
 
 export default function ProductList({ tag }) {
   const { productsByTag, fetchProductsByTag, loading } = useProductsByTag();
@@ -49,13 +48,7 @@ export default function ProductList({ tag }) {
             {(loading ? Array(4).fill(null) : products).map((item, i) => (
               <SwiperSlide key={i}>
                 {loading ? (
-                  <>
-                    <Skeleton height={295} borderRadius={20} />
-                    <div className="mt-3">
-                      <Skeleton width="60%" height={20} />
-                      <Skeleton width="40%" height={20} />
-                    </div>
-                  </>
+                  <ProductSkeleton key={i}/>
                 ) : (
                   <Product
                     key={i}
@@ -73,9 +66,7 @@ export default function ProductList({ tag }) {
           <div className={`grid lg:grid-cols-4 ${isInPage ? "grid-cols-2" : "md:grid-cols-2"} gap-x-5 gap-y-7 mt-[55px]`}>
             {(loading ? Array(4).fill(null) : products).map((item, i) =>
               loading ? (
-                <div key={i}>
-                  <Skeleton height={295} borderRadius={20} />
-                </div>
+                <ProductSkeleton key={i}/>
               ) : (
                 <Product
                   key={i}
