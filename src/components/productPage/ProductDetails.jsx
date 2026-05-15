@@ -24,7 +24,7 @@ export default function ProductDetails({ product, loading }) {
   const [discountAvailable, setDiscountAvailable] = useState();
 
   const isLoading = loading || !product;
-  const { addToCart, isInCart } = useStore();
+  const { isInCart } = useStore();
   const { setSelectedProductOptions } = useStore();
   const { user, token } = useUserStore();
   const [btnloading, setBtnLoading] = useState(false);
@@ -49,7 +49,6 @@ export default function ProductDetails({ product, loading }) {
         setSelectedProductOptions(product.documentId, "color", selectedColor);
         setSelectedProductOptions(product.documentId, "size", selectedSize);
         setSelectedProductOptions(product.documentId, "qty", selectedQty);
-        addToCart(product);
 
         setSelectedQty(1);
         toast.update(toastId, {

@@ -34,7 +34,8 @@ export const useStore = create((set, get) => ({
   selectedFilterOptions: { color: "", size: "" },
   setSelectedFilterOptions: (val) =>
     set({ selectedFilterOptions: val }),
-
+  
+  setCart: (newCart) => set({ cart: newCart }),
   /* ================= Filter Logic ================= */
   isFiltered: () => {
     const { selectedColor, selectedSize, selectedPriceRange } = get();
@@ -81,7 +82,6 @@ export const useStore = create((set, get) => ({
   cartLoading: false,
   cartError: null,
 
-  // جلب الكارت من Strapi وتخزينه في ال Zustand
   fetchCartFromApi: async () => {
   set({ cartLoading: true, cartError: null });
   try {
@@ -95,7 +95,6 @@ export const useStore = create((set, get) => ({
 
     const currentCart = get().cart;
 
-    // ✅ أهم سطر
     const isSame =
       JSON.stringify(currentCart) === JSON.stringify(items);
 
@@ -116,8 +115,7 @@ export const useStore = create((set, get) => ({
   }
 },
 
-  // إضافة منتج للكارت: أولًا API بعدين تحديث الحالة المحلية
-  addToCartWithApi: async ({ product, color, size, qty }) => {
+addToCartWithApi: async ({ product, color, size, qty }) => {
     // لو المنتج موجود بالفعل في الكارت المحلي، منخرجش طلب جديد
     const exists = get().cart.some(
       (p) => p.documentId === product.documentId
@@ -140,42 +138,6 @@ export const useStore = create((set, get) => ({
       cart: [...state.cart, product],
     }));
   },
-
-  // الإضافة المحلية فقط (لو حبيت تستخدمها بدون API)
-  addToCart: (item) =>
-    set((state) => {
-      const exists = state.cart.some(
-        (product) => item.documentId === product.documentId
-      );
-
-      if (exists) return state;
-
-      return {
-        cart: [...state.cart, item],
-      };
-    }),
-
-  removeFromCart: (item) =>
-    set((state) => {
-      const index = state.cart.findIndex(
-        (product) => item.documentId === product.documentId
-      );
-
-      if (index !== -1) {
-        return {
-          ...state,
-          cart: [
-            ...state.cart.slice(0, index),
-            ...state.cart.slice(index + 1),
-          ],
-          selectedProductOptions: state.selectedProductOptions.filter(
-            (product) => product.productId !== item.documentId
-          ),
-        };
-      }
-
-      return state;
-    }),
 
   isInCart: (id) =>
     get().cart.some((product) => product.documentId === id),

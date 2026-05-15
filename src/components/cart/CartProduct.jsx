@@ -7,13 +7,18 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import { getProductInCartId, removeFromCartApi } from "../../modules/shop";
+import { useUserStore } from "../../modules/shop/store/useUserStore";
 
 export default function CartProduct({ product }) {
   const { cart, removeFromCart } = useStore();
   const { selectedProductOptions, setSelectedProductOptions } = useStore();
+  const { setCart } = useStore();
   const [size, setSize] = useState();
   const [color, setColor] = useState();
   const [qty, setQty] = useState();
+  const { user, token } = useUserStore();
+  const { fetchCartFromApi } = useStore();
 
   const getOptions = () => {
     console.log(selectedProductOptions)
@@ -37,8 +42,19 @@ export default function CartProduct({ product }) {
       if (result.isConfirmed) {
         const toastId = toast.loading("Removing product from cart...");
 
-        setTimeout(() => {
-          removeFromCart(product);
+        setTimeout(async () => {
+          try {
+            const removedId = await removeFromCartApi({
+              token,
+              userId: user?.id,
+              productId: product.documentId
+            })
+
+            await fetchCartFromApi();
+
+          } catch (error) {
+            console.log(error)
+          }
           toast.update(toastId, {
             render: "Product removed from cart successfully",
             type: "success",
