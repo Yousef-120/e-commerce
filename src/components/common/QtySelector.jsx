@@ -34,7 +34,7 @@ export default function QtySelector({ className, iconSize, selectedQty, setSelec
 
       {/* Quantity Display */}
       <div className="w-5 flex justify-center items-center select-none">
-        <span className="font-bold text-[14px">{selectedQty}</span>
+        <span className="font-bold text-[14px]">{selectedQty}</span>
       </div>
 
       {/* Plus Button */}

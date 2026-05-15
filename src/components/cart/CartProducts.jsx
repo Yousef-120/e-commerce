@@ -1,9 +1,16 @@
+import { useEffect } from "react";
 import CartProduct from "./CartProduct";
 import { useStore } from "../../modules/shop/store/useStore";
 import Line from "../ui/Line";
 
 export default function CartProducts() {
-  const { cart } = useStore();
+  const { cart, cartLoading, fetchCartFromApi } = useStore();
+
+  useEffect(() => {
+    fetchCartFromApi();
+  }, [fetchCartFromApi]);
+
+  if (cartLoading) return null;
 
   return (
     cart.length !== 0 && (

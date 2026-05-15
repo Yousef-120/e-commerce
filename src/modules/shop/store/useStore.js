@@ -1,11 +1,12 @@
 import { create } from "zustand";
+import { getCart, addToCartApi } from "..";
+import { useUserStore } from "./useUserStore";
 
 // helper function لمقارنة arrays
 const isArrayEqual = (a = [], b = []) =>
   a.length === b.length && a.every((v, i) => v === b[i]);
 
 export const useStore = create((set, get) => ({
-
   /* ================= UI ================= */
   menuActive: false,
   setMenuActive: (val) => set({ menuActive: val }),
@@ -36,11 +37,7 @@ export const useStore = create((set, get) => ({
 
   /* ================= Filter Logic ================= */
   isFiltered: () => {
-    const {
-      selectedColor,
-      selectedSize,
-      selectedPriceRange,
-    } = get();
+    const { selectedColor, selectedSize, selectedPriceRange } = get();
 
     const colorNotChanged = selectedColor === "";
     const sizeNotChanged = selectedSize === "";
@@ -61,9 +58,7 @@ export const useStore = create((set, get) => ({
       if (exists) {
         return {
           selectedProductOptions: state.selectedProductOptions.map((item) =>
-            item.productId === productId
-              ? { ...item, [key]: value }
-              : item
+            item.productId === productId ? { ...item, [key]: value } : item
           ),
         };
       }
@@ -81,9 +76,72 @@ export const useStore = create((set, get) => ({
       };
     }),
 
-  /* ================= Cart ================= */
+  /* ================= Cart (Local + API) ================= */
   cart: [],
+  cartLoading: false,
+  cartError: null,
 
+  // جلب الكارت من Strapi وتخزينه في ال Zustand
+  fetchCartFromApi: async () => {
+  set({ cartLoading: true, cartError: null });
+  try {
+    const { token, user } = useUserStore.getState();
+    const items = await getCart({ token, userId: user?.id });
+
+    if (!items) {
+      set({ cartLoading: false });
+      return;
+    }
+
+    const currentCart = get().cart;
+
+    // ✅ أهم سطر
+    const isSame =
+      JSON.stringify(currentCart) === JSON.stringify(items);
+
+    if (isSame) {
+      set({ cartLoading: false });
+      return;
+    }
+
+    set({
+      cart: items,
+      cartLoading: false,
+    });
+  } catch (err) {
+    set({
+      cartError: err?.message || "Failed to fetch cart",
+      cartLoading: false,
+    });
+  }
+},
+
+  // إضافة منتج للكارت: أولًا API بعدين تحديث الحالة المحلية
+  addToCartWithApi: async ({ product, color, size, qty }) => {
+    // لو المنتج موجود بالفعل في الكارت المحلي، منخرجش طلب جديد
+    const exists = get().cart.some(
+      (p) => p.documentId === product.documentId
+    );
+    if (exists) return;
+
+    const { token, user } = useUserStore.getState();
+
+    await addToCartApi({
+      token,
+      userId: user?.id,
+      productId: product.id,
+      color,
+      size,
+      qty,
+    });
+
+    // بعد نجاح الـ API نضيفه محليًا عشان الـ UI يتحدث
+    set((state) => ({
+      cart: [...state.cart, product],
+    }));
+  },
+
+  // الإضافة المحلية فقط (لو حبيت تستخدمها بدون API)
   addToCart: (item) =>
     set((state) => {
       const exists = state.cart.some(
@@ -122,3 +180,4 @@ export const useStore = create((set, get) => ({
   isInCart: (id) =>
     get().cart.some((product) => product.documentId === id),
 }));
+

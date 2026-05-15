@@ -50,7 +50,7 @@ export const useOneProduct = create((set, get) => ({
   },
 }));
 
-export const useProductsByTag = create((set, get) => ({
+export const useProductsByTag = create((set) => ({
   productsByTag: [],
   loading: false,
   error: null,

@@ -16,6 +16,7 @@ export default function CartProduct({ product }) {
   const [qty, setQty] = useState();
 
   const getOptions = () => {
+    console.log(selectedProductOptions)
     const productOptions = selectedProductOptions.find((productOptions) => productOptions.productId === product.documentId);
     if (productOptions) {
       setColor(productOptions.color);
@@ -76,7 +77,7 @@ export default function CartProduct({ product }) {
                 Color: <span className="text-[#00000099]">{color}</span>
               </span>
             </Link>
-            <Link to={`/shop/product/${product.documentId}`} className="flex justify-between w-full">
+            <div className="flex justify-between w-full">
               <div className="price font-bold text-[24px] text-[#000000]">${product.price}</div>
               <QtySelector
                 className={"gap-2.5 lg:gap-5! px-2! py-1! lg:py-2.5! w-fit!"}
@@ -84,7 +85,7 @@ export default function CartProduct({ product }) {
                 selectedQty={qty}
                 setSelectedQty={(newQty) => setSelectedProductOptions(product.documentId, "qty", newQty)}
               />
-            </Link>
+            </div>
           </div>
         </div>
       </div>

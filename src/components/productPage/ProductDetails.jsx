@@ -11,6 +11,8 @@ import { useStore } from "../../modules/shop/store/useStore";
 import SmallLoader from "../ui/SmallLoader";
 import { toast, Bounce } from "react-toastify";
 import useCheckAuth from "../../modules/core/components/useCheckAuth";
+import { addToCartApi } from "../../modules/shop";
+import { useUserStore } from "../../modules/shop/store/useUserStore";
 
 export default function ProductDetails({ product, loading }) {
   const [mainImg, setMainImg] = useState();
@@ -24,20 +26,31 @@ export default function ProductDetails({ product, loading }) {
   const isLoading = loading || !product;
   const { addToCart, isInCart } = useStore();
   const { setSelectedProductOptions } = useStore();
+  const { user, token } = useUserStore();
   const [btnloading, setBtnLoading] = useState(false);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (isInCart(product.documentId)) return;
 
     if (selectedSize != "" && selectedColor != "") {
       setBtnLoading(true);
-      setSelectedProductOptions(product.documentId, "color", selectedColor);
-      setSelectedProductOptions(product.documentId, "size", selectedSize);
-      setSelectedProductOptions(product.documentId, "qty", selectedQty);
-      addToCart(product);
       const toastId = toast.loading("Adding product to cart...");
-      setTimeout(() => {
-        setBtnLoading(false);
+      console.log(user)
+      try {
+        await addToCartApi({
+          token,
+          userId: user?.id,
+          productId: product.id,
+          color: selectedColor,
+          size: selectedSize,
+          qty: selectedQty,
+        });
+
+        setSelectedProductOptions(product.documentId, "color", selectedColor);
+        setSelectedProductOptions(product.documentId, "size", selectedSize);
+        setSelectedProductOptions(product.documentId, "qty", selectedQty);
+        addToCart(product);
+
         setSelectedQty(1);
         toast.update(toastId, {
           render: "Added to cart successfully",
@@ -45,7 +58,17 @@ export default function ProductDetails({ product, loading }) {
           isLoading: false,
           autoClose: 3000,
         });
-      }, 1000);
+      } catch (error) {
+        console.log("Add to cart error response:", error?.response?.data);
+        toast.update(toastId, {
+          render: "Failed to add to cart",
+          type: "error",
+          isLoading: false,
+          autoClose: 3000,
+        });
+      } finally {
+        setBtnLoading(false);
+      }
     } else {
       toast.warn("You must complete product information order", {
         position: "top-right",
@@ -56,7 +79,6 @@ export default function ProductDetails({ product, loading }) {
         draggable: true,
         progress: undefined,
         theme: "light",
-        transition: Bounce,
       });
     }
   };

@@ -1,2 +1,2 @@
-export * from "./api/api"
-export * from "./store/productsStore"
+export * from "./api/api";
+export * from "./store/productsStore";

@@ -6,17 +6,19 @@ import { useStore } from "../modules/shop/store/useStore";
 import Loader from "../components/ui/Loader";
 
 export default function CartPage() {
-  const { cart } = useStore();
+  const cart = useStore((state) => state.cart);
   const [loading, setLoading] = useState(false);
-  const [ cartEmpty , setCartEmpty ] = useState()
+  const [cartEmpty, setCartEmpty] = useState();
 
   useEffect(() => {
     setLoading(true);
-    cart.length !== 0 && setCartEmpty(false)
-    setTimeout(() => {
-      cart.length == 0 && setCartEmpty(true)
+
+    const timer = setTimeout(() => {
+      setCartEmpty(cart.length === 0);
       setLoading(false);
-    }, [1000]);
+    }, 1000);
+
+    return () => clearTimeout(timer); // ✅ مهم
   }, [cart]);
 
   return (
