@@ -34,7 +34,7 @@ export const useStore = create((set, get) => ({
   selectedFilterOptions: { color: "", size: "" },
   setSelectedFilterOptions: (val) =>
     set({ selectedFilterOptions: val }),
-  
+
   setCart: (newCart) => set({ cart: newCart }),
   /* ================= Filter Logic ================= */
   isFiltered: () => {
@@ -77,45 +77,45 @@ export const useStore = create((set, get) => ({
       };
     }),
 
-  /* ================= Cart (Local + API) ================= */
+  /* ================= Cart (API) ================= */
   cart: [],
   cartLoading: false,
   cartError: null,
 
   fetchCartFromApi: async () => {
-  set({ cartLoading: true, cartError: null });
-  try {
-    const { token, user } = useUserStore.getState();
-    const items = await getCart({ token, userId: user?.id });
+    set({ cartLoading: true, cartError: null });
+    try {
+      const { token, user } = useUserStore.getState();
+      const items = await getCart({ token, userId: user?.id });
 
-    if (!items) {
-      set({ cartLoading: false });
-      return;
+      if (!items) {
+        set({ cartLoading: false });
+        return;
+      }
+
+      const currentCart = get().cart;
+
+      const isSame =
+        JSON.stringify(currentCart) === JSON.stringify(items);
+
+      if (isSame) {
+        set({ cartLoading: false });
+        return;
+      }
+
+      set({
+        cart: items,
+        cartLoading: false,
+      });
+    } catch (err) {
+      set({
+        cartError: err?.message || "Failed to fetch cart",
+        cartLoading: false,
+      });
     }
+  },
 
-    const currentCart = get().cart;
-
-    const isSame =
-      JSON.stringify(currentCart) === JSON.stringify(items);
-
-    if (isSame) {
-      set({ cartLoading: false });
-      return;
-    }
-
-    set({
-      cart: items,
-      cartLoading: false,
-    });
-  } catch (err) {
-    set({
-      cartError: err?.message || "Failed to fetch cart",
-      cartLoading: false,
-    });
-  }
-},
-
-addToCartWithApi: async ({ product, color, size, qty }) => {
+  addToCartWithApi: async ({ product, color, size, qty }) => {
     // لو المنتج موجود بالفعل في الكارت المحلي، منخرجش طلب جديد
     const exists = get().cart.some(
       (p) => p.documentId === product.documentId
