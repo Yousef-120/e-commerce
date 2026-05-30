@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { getProductInCartId, removeFromCartApi } from "../../modules/shop";
+import { getProductInCartId, getProductInCartOptions, removeFromCartApi } from "../../modules/shop";
 import { useUserStore } from "../../modules/shop/store/useUserStore";
 
 export default function CartProduct({ product }) {
@@ -20,13 +20,13 @@ export default function CartProduct({ product }) {
   const { user, token } = useUserStore();
   const { fetchCartFromApi } = useStore();
 
-  const getOptions = () => {
-    console.log(selectedProductOptions)
-    const productOptions = selectedProductOptions.find((productOptions) => productOptions.productId === product.documentId);
-    if (productOptions) {
-      setColor(productOptions.color);
-      setSize(productOptions.size);
-      setQty(productOptions.qty);
+  const getOptions = async () => {
+    const options = await getProductInCartOptions({token , productId: product.documentId})
+
+    if (options) {
+      setColor(options.color);
+      setSize(options.size);
+      setQty(options.qty);
     }
   };
   const handleRemoveFromCart = (product) => {

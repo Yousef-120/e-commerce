@@ -11,7 +11,7 @@ import { useStore } from "../../modules/shop/store/useStore";
 import SmallLoader from "../ui/SmallLoader";
 import { toast, Bounce } from "react-toastify";
 import useCheckAuth from "../../modules/core/components/useCheckAuth";
-import { addToCartApi, isProductInCart } from "../../modules/shop";
+import { addToCartApi , isProductInCart } from "../../modules/shop";
 import { useUserStore } from "../../modules/shop/store/useUserStore";
 
 export default function ProductDetails({ product, loading }) {
@@ -58,6 +58,7 @@ export default function ProductDetails({ product, loading }) {
           isLoading: false,
           autoClose: 3000,
         });
+
       } catch (error) {
         console.log("Add to cart error response:", error?.response?.data);
         toast.update(toastId, {

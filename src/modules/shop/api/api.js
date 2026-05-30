@@ -162,20 +162,45 @@ export const isProductInCart = async ({ token, userId, productId }) => {
   try {
     if (!token || !userId) console.log("Not authenticated")
 
-    const payload = {
-      data: {
-        users_permissions_user: userId
-      }
-    }
-
     const response = await axios.get(`${domain}/api/cart-items?filters[product][documentId][$eq]=${productId}`, {
       headers: authHeaders(token)
     })
 
-    console.log(productId)
     return response.data.data.length > 0
 
   } catch (error) {
 
+  }
+}
+
+export const getProductInCartOptions = async ({token , productId })=>
+{
+  try {
+    if (!token || !productId) return
+
+    const res = await axios.get(`${domain}/api/cart-items` , {
+      headers: authHeaders(token),
+      params: {
+        populate: {
+          product: {
+            populate: "*",
+          },
+        },
+        "filters[product][documentId][$eq]": productId,
+      },
+    })
+
+    if (!res) return
+    
+    const productInCart = res.data.data[0]
+
+    const options = {color: productInCart.color , size: productInCart.size , qty: productInCart.qty}
+
+    console.log(productInCart)
+    console.log(options)
+
+    return options
+  } catch (error) {
+    console.log(error)
   }
 }
