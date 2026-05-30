@@ -32,8 +32,7 @@ export const useStore = create((set, get) => ({
     set({ selectedPriceRangeChanged: val }),
 
   selectedFilterOptions: { color: "", size: "" },
-  setSelectedFilterOptions: (val) =>
-    set({ selectedFilterOptions: val }),
+  setSelectedFilterOptions: (val) => set({ selectedFilterOptions: val }),
 
   setCart: (newCart) => set({ cart: newCart }),
   /* ================= Filter Logic ================= */
@@ -53,13 +52,13 @@ export const useStore = create((set, get) => ({
   setSelectedProductOptions: (productId, key, value) =>
     set((state) => {
       const exists = state.selectedProductOptions.find(
-        (item) => item.productId === productId
+        (item) => item.productId === productId,
       );
 
       if (exists) {
         return {
           selectedProductOptions: state.selectedProductOptions.map((item) =>
-            item.productId === productId ? { ...item, [key]: value } : item
+            item.productId === productId ? { ...item, [key]: value } : item,
           ),
         };
       }
@@ -95,8 +94,7 @@ export const useStore = create((set, get) => ({
 
       const currentCart = get().cart;
 
-      const isSame =
-        JSON.stringify(currentCart) === JSON.stringify(items);
+      const isSame = JSON.stringify(currentCart) === JSON.stringify(items);
 
       if (isSame) {
         set({ cartLoading: false });
@@ -117,9 +115,7 @@ export const useStore = create((set, get) => ({
 
   addToCartWithApi: async ({ product, color, size, qty }) => {
     // لو المنتج موجود بالفعل في الكارت المحلي، منخرجش طلب جديد
-    const exists = get().cart.some(
-      (p) => p.documentId === product.documentId
-    );
+    const exists = get().cart.some((p) => p.documentId === product.documentId);
     if (exists) return;
 
     const { token, user } = useUserStore.getState();
@@ -139,7 +135,5 @@ export const useStore = create((set, get) => ({
     }));
   },
 
-  isInCart: (id) =>
-    get().cart.some((product) => product.documentId === id),
+  isInCart: (id) => get().cart.some((product) => product.documentId === id),
 }));
-

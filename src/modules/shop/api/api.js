@@ -13,7 +13,9 @@ export const getAllProducts = async () => {
 
 export const getOneProduct = async (productId) => {
   try {
-    const res = await axios.get(domain + `/api/products/${productId}?populate=*`);
+    const res = await axios.get(
+      domain + `/api/products/${productId}?populate=*`,
+    );
     console.log(res.data.data);
     return res.data.data;
   } catch (err) {
@@ -34,8 +36,8 @@ export const getAllSizes = async () => {
 const authHeaders = (token) =>
   token
     ? {
-      Authorization: `Bearer ${token}`,
-    }
+        Authorization: `Bearer ${token}`,
+      }
     : {};
 
 export const getCart = async ({ token, userId } = {}) => {
@@ -58,11 +60,15 @@ export const getCart = async ({ token, userId } = {}) => {
 
     if (!Array.isArray(data)) return [];
 
-    const normalize = (p) => (p?.attributes ? { id: p.id, ...p.attributes } : p);
+    const normalize = (p) =>
+      p?.attributes ? { id: p.id, ...p.attributes } : p;
 
     return data
       .flatMap((item) => {
-        const rel = item?.product ?? item?.attributes?.product?.data ?? item?.product?.data;
+        const rel =
+          item?.product ??
+          item?.attributes?.product?.data ??
+          item?.product?.data;
 
         if (!rel) return [];
         if (Array.isArray(rel)) return rel.map(normalize);
@@ -94,22 +100,23 @@ export const getProductInCartId = async ({ token, userId, productId } = {}) => {
       },
     });
 
-    const cartProducts = res.data?.data
-    console.log(cartProducts)
+    const cartProducts = res.data?.data;
+    console.log(cartProducts);
 
-    const productInCart = cartProducts.find((cartProduct) => cartProduct.product.documentId === productId)
-    const productInCartId = productInCart?.documentId
+    const productInCart = cartProducts.find(
+      (cartProduct) => cartProduct.product.documentId === productId,
+    );
+    const productInCartId = productInCart?.documentId;
 
-    return productInCartId
+    return productInCartId;
+  } catch (err) {
+    console.log(err);
   }
-  catch (err) {
-    console.log(err)
-  }
-}
+};
 
 export const removeFromCartApi = async ({ token, userId, productId }) => {
   try {
-    const id = await getProductInCartId({ token, userId, productId })
+    const id = await getProductInCartId({ token, userId, productId });
 
     if (!id) {
       console.log("Product not found in cart");
@@ -129,7 +136,14 @@ export const removeFromCartApi = async ({ token, userId, productId }) => {
   }
 };
 
-export const addToCartApi = async ({ token, userId, productId, color, size, qty }) => {
+export const addToCartApi = async ({
+  token,
+  userId,
+  productId,
+  color,
+  size,
+  qty,
+}) => {
   try {
     if (!token || !userId) throw new Error("Not authenticated");
 
@@ -160,25 +174,24 @@ export const addToCartApi = async ({ token, userId, productId, color, size, qty 
 
 export const isProductInCart = async ({ token, userId, productId }) => {
   try {
-    if (!token || !userId) console.log("Not authenticated")
+    if (!token || !userId) console.log("Not authenticated");
 
-    const response = await axios.get(`${domain}/api/cart-items?filters[product][documentId][$eq]=${productId}`, {
-      headers: authHeaders(token)
-    })
+    const response = await axios.get(
+      `${domain}/api/cart-items?filters[product][documentId][$eq]=${productId}`,
+      {
+        headers: authHeaders(token),
+      },
+    );
 
-    return response.data.data.length > 0
+    return response.data.data.length > 0;
+  } catch (error) {}
+};
 
-  } catch (error) {
-
-  }
-}
-
-export const getProductInCartOptions = async ({token , productId })=>
-{
+export const getProductInCartOptions = async ({ token, productId }) => {
   try {
-    if (!token || !productId) return
+    if (!token || !productId) return;
 
-    const res = await axios.get(`${domain}/api/cart-items` , {
+    const res = await axios.get(`${domain}/api/cart-items`, {
       headers: authHeaders(token),
       params: {
         populate: {
@@ -188,19 +201,44 @@ export const getProductInCartOptions = async ({token , productId })=>
         },
         "filters[product][documentId][$eq]": productId,
       },
-    })
+    });
+
+    if (!res) return;
+
+    const productInCart = res.data.data[0];
+
+    const options = {
+      color: productInCart.color,
+      size: productInCart.size,
+      qty: productInCart.qty,
+    };
+
+    console.log(productInCart);
+    console.log(options);
+
+    return options;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getPromoCodes = async ({token})=>
+{
+  try {
+    const res = await axios.get(`${domain}/api/promo-codes`,
+      {
+        headers: authHeaders(token)
+      }
+    )
 
     if (!res) return
-    
-    const productInCart = res.data.data[0]
+    const promoCode = res.data.data
 
-    const options = {color: productInCart.color , size: productInCart.size , qty: productInCart.qty}
+    console.log(res.data.data)
+    return promoCode
 
-    console.log(productInCart)
-    console.log(options)
-
-    return options
+    return 
   } catch (error) {
-    console.log(error)
+    console.log(error.response?.data)
   }
 }

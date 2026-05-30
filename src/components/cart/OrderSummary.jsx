@@ -2,8 +2,10 @@ import Line from "../ui/Line";
 import { MdOutlineDiscount } from "react-icons/md";
 import { FaArrowRight } from "react-icons/fa6";
 import { useStore } from "../../modules/shop/store/useStore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { useUserStore } from "../../modules/shop/store/useUserStore";
+import { getPromoCodes } from "../../modules/shop";
 
 export default function OrderSummary() {
   const { cart, selectedProductOptions } = useStore();
@@ -12,11 +14,41 @@ export default function OrderSummary() {
   const [discount, setDiscount] = useState(0);
   const [total, setTotal] = useState(0);
   const [deliveryFee] = useState(15);
+  const { token } = useUserStore();
+  const pCodeRef = useRef(null);
+
+  const handlePCodeRef = () => {
+    pCodeRef.current.focus();
+    const pCodeName = pCodeRef.current.value;
+    if (pCodeName.trim() !== "") {
+      handlePrompCode(pCodeName);
+    }
+  };
+
+  const handlePrompCode = async (promoCodeName) => {
+    try {
+      const promoCodes = await getPromoCodes({ token });
+
+      const promoCodeInfo = promoCodes.find(
+        (pCode) => promoCodeName === pCode.name,
+      );
+
+      if (promoCodeInfo === undefined) {
+        alert("Promo Code Not True");
+        return;
+      }
+      console.log(promoCodeInfo.discount + "%");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if (cart && cart.length !== 0) {
       const subTotalCalc = cart.reduce((total, product) => {
-        const option = selectedProductOptions.find((opt) => opt.productId === product.documentId);
+        const option = selectedProductOptions.find(
+          (opt) => opt.productId === product.documentId,
+        );
 
         const qty = option?.qty || 1;
 
@@ -40,32 +72,55 @@ export default function OrderSummary() {
         <div className="details mt-6 text-[18px] leading-[100%] mb-6">
           <ul className="list-none flex flex-col gap-5">
             <li className="flex justify-between items-center">
-              <span className="text-[#00000099] text-[16px] lg:text-[20px]">Subtotal</span>
-              <span className="font-bold text-[16px] lg:text-[20px]">${subTotal}</span>
+              <span className="text-[#00000099] text-[16px] lg:text-[20px]">
+                Subtotal
+              </span>
+              <span className="font-bold text-[16px] lg:text-[20px]">
+                ${subTotal}
+              </span>
             </li>
             <li className="flex justify-between items-center">
-              <span className="text-[#00000099] text-[16px] lg:text-[20px]">Discount (-{discountRate}%)</span>
-              <span className="font-bold text-[16px] lg:text-[20px] text-[#FF3333]">-${discount}</span>
+              <span className="text-[#00000099] text-[16px] lg:text-[20px]">
+                Discount (-{discountRate}%)
+              </span>
+              <span className="font-bold text-[16px] lg:text-[20px] text-[#FF3333]">
+                -${discount}
+              </span>
             </li>
             <li className="flex justify-between items-center">
-              <span className="text-[#00000099] text-[16px] lg:text-[20px]">Delivery Fee</span>
-              <span className="font-bold text-[16px] lg:text-[20px]">${deliveryFee}</span>
+              <span className="text-[#00000099] text-[16px] lg:text-[20px]">
+                Delivery Fee
+              </span>
+              <span className="font-bold text-[16px] lg:text-[20px]">
+                ${deliveryFee}
+              </span>
             </li>
           </ul>
           <Line className={"my-5!"} />
           <div className="flex justify-between items-center">
             <span className="text-[20px] lg:text-2xl">Total</span>
-            <span className="font-bold text-[16px] lg:text-[20px]">${total}</span>
+            <span className="font-bold text-[16px] lg:text-[20px]">
+              ${total}
+            </span>
           </div>
         </div>
         {/* Promo Code  */}
         <div className="flex gap-3 w-full mb-6">
           <div className="relative w-[70%] lg:w-[80%]">
-            <MdOutlineDiscount size={22} className="absolute left-4 top-1/2 translate-y-[-50%] text-[#00000066]" />
-            <input placeholder="Add promo code" className="rounded-full bg-[#F0F0F0] py-3.5 px-12 placeholder:text-[#00000066] w-full outline-gray-700" type="text" />
+            <MdOutlineDiscount
+              size={22}
+              className="absolute left-4 top-1/2 translate-y-[-50%] text-[#00000066]"
+            />
+            <input
+              placeholder="Add promo code"
+              className="rounded-full bg-[#F0F0F0] py-3.5 px-12 placeholder:text-[#00000066] w-full outline-gray-700"
+              type="text"
+              ref={pCodeRef}
+            />
           </div>
           <motion.button
             whileTap={{ scale: 0.95 }}
+            onClick={handlePCodeRef}
             transition={{
               type: "spring",
               stiffness: 200,

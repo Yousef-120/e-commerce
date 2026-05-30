@@ -11,7 +11,7 @@ import { useStore } from "../../modules/shop/store/useStore";
 import SmallLoader from "../ui/SmallLoader";
 import { toast, Bounce } from "react-toastify";
 import useCheckAuth from "../../modules/core/components/useCheckAuth";
-import { addToCartApi , isProductInCart } from "../../modules/shop";
+import { addToCartApi, isProductInCart } from "../../modules/shop";
 import { useUserStore } from "../../modules/shop/store/useUserStore";
 
 export default function ProductDetails({ product, loading }) {
@@ -28,7 +28,7 @@ export default function ProductDetails({ product, loading }) {
   const { setSelectedProductOptions } = useStore();
   const { user, token } = useUserStore();
   const [btnloading, setBtnLoading] = useState(false);
-  const [inCart, setInCart] = useState(false)
+  const [inCart, setInCart] = useState(false);
 
   const handleAdd = async () => {
     if (isInCart(product.documentId)) return;
@@ -36,7 +36,7 @@ export default function ProductDetails({ product, loading }) {
     if (selectedSize != "" && selectedColor != "") {
       setBtnLoading(true);
       const toastId = toast.loading("Adding product to cart...");
-      console.log(user)
+      console.log(user);
       try {
         await addToCartApi({
           token,
@@ -58,7 +58,6 @@ export default function ProductDetails({ product, loading }) {
           isLoading: false,
           autoClose: 3000,
         });
-
       } catch (error) {
         console.log("Add to cart error response:", error?.response?.data);
         toast.update(toastId, {
@@ -95,15 +94,17 @@ export default function ProductDetails({ product, loading }) {
 
   useEffect(() => {
     const checkInCart = async () => {
-      const result = await isProductInCart({ token, userId: user?.id, productId: product?.documentId })
-      setInCart(result)
-      console.log(result)
-    }
+      const result = await isProductInCart({
+        token,
+        userId: user?.id,
+        productId: product?.documentId,
+      });
+      setInCart(result);
+      console.log(result);
+    };
 
     checkInCart();
-  }, [product, handleAdd])
-
-
+  }, [product, handleAdd]);
 
   useEffect(() => {
     product && setMainImg(domain + product.mainImg.url);
@@ -120,7 +121,12 @@ export default function ProductDetails({ product, loading }) {
             <div className="product-images w-full lg:w-1/2 flex flex-col-reverse lg:flex-row gap-3.5 max-h-[570px]">
               <div className="sub-images flex lg:flex-col flex-row gap-3 lg:gap-3.5 w-full lg:w-[20%]">
                 {[...Array(3)].map((_, i) => (
-                  <Skeleton key={i} height={168} width="100%" borderRadius={20} />
+                  <Skeleton
+                    key={i}
+                    height={168}
+                    width="100%"
+                    borderRadius={20}
+                  />
                 ))}
               </div>
               <div className="main-img w-full lg:w-[80%]">
@@ -142,7 +148,9 @@ export default function ProductDetails({ product, loading }) {
         ) : (
           <>
             {/* Product Images*/}
-            <div className={`product-images w-full lg:w-1/2 flex flex-col-reverse lg:flex-row gap-3.5 max-h-[570px]`}>
+            <div
+              className={`product-images w-full lg:w-1/2 flex flex-col-reverse lg:flex-row gap-3.5 max-h-[570px]`}
+            >
               {product.imgs && (
                 <div className="sub-images flex lg:flex-col flex-row gap-3 lg:gap-3.5 w-full lg:w-[20%]">
                   {product.imgs.slice(0, 3).map((img, i) => (
@@ -151,21 +159,33 @@ export default function ProductDetails({ product, loading }) {
                       onClick={() => setMainImg(domain + img.url)}
                       className="w-full aspect-square lg:aspect-auto lg:h-[168px] overflow-hidden rounded-[20px] border-[#000000] focus:border"
                     >
-                      <img className="w-full h-full object-cover hover:scale-105 transition duration-300" src={domain + img.url} alt={`Product sub image ${i + 1}`} />
+                      <img
+                        className="w-full h-full object-cover hover:scale-105 transition duration-300"
+                        src={domain + img.url}
+                        alt={`Product sub image ${i + 1}`}
+                      />
                     </button>
                   ))}
                 </div>
               )}
 
-              <button className={`main-img w-full ${product.imgs && "lg:w-[80%]"} overflow-hidden rounded-[20px] aspect-square border-[#000000] ${product.imgs && "focus:border"}`}>
-                <img className="w-full h-full object-cover hover:scale-105 transition duration-300" src={mainImg || productImg} alt="Main Product" />
+              <button
+                className={`main-img w-full ${product.imgs && "lg:w-[80%]"} overflow-hidden rounded-[20px] aspect-square border-[#000000] ${product.imgs && "focus:border"}`}
+              >
+                <img
+                  className="w-full h-full object-cover hover:scale-105 transition duration-300"
+                  src={mainImg || productImg}
+                  alt="Main Product"
+                />
               </button>
             </div>
 
             {/* Product Details */}
             <div className="product-details w-full lg:w-1/2 flex lg:block flex-col justify-between">
               <div className="info text-[#000000]">
-                <h1 className="font-bold integral-font text-[32px] sm:text-[40px] leading-[100%] tracking-normal mb-3.5">{product.name}</h1>
+                <h1 className="font-bold integral-font text-[32px] sm:text-[40px] leading-[100%] tracking-normal mb-3.5">
+                  {product.name}
+                </h1>
 
                 <div className="stars flex gap-2 mb-3.5">
                   {[...Array(stars)].map((_, i) => (
@@ -174,16 +194,26 @@ export default function ProductDetails({ product, loading }) {
                 </div>
 
                 <div className="pricing flex flex-wrap gap-3 items-center mb-5">
-                  <span className="font-bold text-[28px] sm:text-[32px] text-[#000000]">${discountAvailable ? priceAfterDiscount : product.price}</span>
-                  {discountAvailable && <span className="font-bold text-[28px] sm:text-[32px] text-[#0000004D] line-through">${product.price}</span>}
+                  <span className="font-bold text-[28px] sm:text-[32px] text-[#000000]">
+                    ${discountAvailable ? priceAfterDiscount : product.price}
+                  </span>
+                  {discountAvailable && (
+                    <span className="font-bold text-[28px] sm:text-[32px] text-[#0000004D] line-through">
+                      ${product.price}
+                    </span>
+                  )}
                   {discountAvailable && (
                     <div className="discount px-3.5 py-1.5 bg-[#FF33331A] rounded-full">
-                      <span className="text-[#FF3333] text-[16px] leading-[100%] tracking-normal">{product.discount}%</span>
+                      <span className="text-[#FF3333] text-[16px] leading-[100%] tracking-normal">
+                        {product.discount}%
+                      </span>
                     </div>
                   )}
                 </div>
 
-                <p className="text-[#00000099] leading-[22px] tracking-normal">-{product.description}</p>
+                <p className="text-[#00000099] leading-[22px] tracking-normal">
+                  -{product.description}
+                </p>
               </div>
 
               {/* Actions */}
@@ -195,8 +225,18 @@ export default function ProductDetails({ product, loading }) {
                   <span className="text-[#00000099]">Select Color</span>
                   <div className="flex gap-4 flex-wrap">
                     {product.colors.map((color, index) => (
-                      <div key={index} onClick={() => setSelectedColor(color.name)} className="w-[37px] h-[37px] rounded-full cursor-pointer relative" style={{ backgroundColor: color.hex }}>
-                        {selectedColor === color.name && <MdCheck size={22} className="absolute inset-0 m-auto w-5 h-5 text-white" />}
+                      <div
+                        key={index}
+                        onClick={() => setSelectedColor(color.name)}
+                        className="w-[37px] h-[37px] rounded-full cursor-pointer relative"
+                        style={{ backgroundColor: color.hex }}
+                      >
+                        {selectedColor === color.name && (
+                          <MdCheck
+                            size={22}
+                            className="absolute inset-0 m-auto w-5 h-5 text-white"
+                          />
+                        )}
                       </div>
                     ))}
                   </div>
@@ -212,8 +252,11 @@ export default function ProductDetails({ product, loading }) {
                       <button
                         onClick={() => setselectedSize(size.name)}
                         key={i}
-                        className={`py-3 px-6 rounded-full cursor-pointer transition ${selectedSize === size.name ? "bg-black text-white" : "bg-[#F0F0F0] text-[#00000099] transition-colors duration-200"
-                          }`}
+                        className={`py-3 px-6 rounded-full cursor-pointer transition ${
+                          selectedSize === size.name
+                            ? "bg-black text-white"
+                            : "bg-[#F0F0F0] text-[#00000099] transition-colors duration-200"
+                        }`}
                       >
                         {size.name}
                       </button>
@@ -224,14 +267,27 @@ export default function ProductDetails({ product, loading }) {
                 <Line />
                 {/* Order */}
                 <div className="order flex flex-col sm:flex-row gap-5">
-                  <QtySelector selectedQty={selectedQty} setSelectedQty={setSelectedQty} product={product} />
+                  <QtySelector
+                    selectedQty={selectedQty}
+                    setSelectedQty={setSelectedQty}
+                    product={product}
+                  />
                   <button
                     onClick={handleAdd}
                     disabled={btnloading || inCart}
-                    className={`w-full py-4 px-12 rounded-full font-medium transition ${btnloading && "flex justify-center items-center"} ${inCart ? "bg-[#2d2d2d] text-[#aaaaaa] cursor-not-allowed" : "bg-[#000000] text-[#ffffff] hover:bg-[#1f1f1f] cursor-pointer"
-                      } `}
+                    className={`w-full py-4 px-12 rounded-full font-medium transition ${btnloading && "flex justify-center items-center"} ${
+                      inCart
+                        ? "bg-[#2d2d2d] text-[#aaaaaa] cursor-not-allowed"
+                        : "bg-[#000000] text-[#ffffff] hover:bg-[#1f1f1f] cursor-pointer"
+                    } `}
                   >
-                    {btnloading ? <SmallLoader className={"w-6! h-6!"} /> : inCart ? "Added To Cart" : "Add To Cart"}
+                    {btnloading ? (
+                      <SmallLoader className={"w-6! h-6!"} />
+                    ) : inCart ? (
+                      "Added To Cart"
+                    ) : (
+                      "Add To Cart"
+                    )}
                   </button>
                 </div>
               </div>

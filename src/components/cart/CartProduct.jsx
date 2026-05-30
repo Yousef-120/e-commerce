@@ -7,7 +7,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { getProductInCartId, getProductInCartOptions, removeFromCartApi } from "../../modules/shop";
+import {
+  getProductInCartId,
+  getProductInCartOptions,
+  removeFromCartApi,
+} from "../../modules/shop";
 import { useUserStore } from "../../modules/shop/store/useUserStore";
 
 export default function CartProduct({ product }) {
@@ -21,7 +25,10 @@ export default function CartProduct({ product }) {
   const { fetchCartFromApi } = useStore();
 
   const getOptions = async () => {
-    const options = await getProductInCartOptions({token , productId: product.documentId})
+    const options = await getProductInCartOptions({
+      token,
+      productId: product.documentId,
+    });
 
     if (options) {
       setColor(options.color);
@@ -47,13 +54,12 @@ export default function CartProduct({ product }) {
             const removedId = await removeFromCartApi({
               token,
               userId: user?.id,
-              productId: product.documentId
-            })
+              productId: product.documentId,
+            });
 
             await fetchCartFromApi();
-
           } catch (error) {
-            console.log(error)
+            console.log(error);
           }
           toast.update(toastId, {
             render: "Product removed from cart successfully",
@@ -72,20 +78,38 @@ export default function CartProduct({ product }) {
   return (
     <div className="product flex justify-between text-[#000000]">
       <div className="flex items-center gap-4 w-full">
-        <Link to={`/shop/product/${product.documentId}`} className="bg-[#F0EEED] aspect-square max-w-[136px] rounded-lg overflow-hidden">
-          <img className="object-cover w-full h-full" src={domain + product.mainImg?.url} alt="" />
+        <Link
+          to={`/shop/product/${product.documentId}`}
+          className="bg-[#F0EEED] aspect-square max-w-[136px] rounded-lg overflow-hidden"
+        >
+          <img
+            className="object-cover w-full h-full"
+            src={domain + product.mainImg?.url}
+            alt=""
+          />
         </Link>
         <div className="info flex justify-between w-full">
           <div className="content w-full">
             <div className="flex justify-between mb-0.5 w-full">
-              <Link to={`/shop/product/${product.documentId}`} className="font-bold text-[16px] lg:text-[20px] truncate w-50">
+              <Link
+                to={`/shop/product/${product.documentId}`}
+                className="font-bold text-[16px] lg:text-[20px] truncate w-50"
+              >
                 {product.name}
               </Link>
-              <motion.button onClick={() => handleRemoveFromCart(product)} whileTap={{ scale: 0.85 }} transition={{ type: "spring", stiffness: 200 }} className="px-2 rounded-full">
+              <motion.button
+                onClick={() => handleRemoveFromCart(product)}
+                whileTap={{ scale: 0.85 }}
+                transition={{ type: "spring", stiffness: 200 }}
+                className="px-2 rounded-full"
+              >
                 <BiSolidTrash color="#FF3333" size={24} />
               </motion.button>
             </div>
-            <Link to={`/shop/product/${product.documentId}`} className="flex flex-col mb-2.5 text-[14px]">
+            <Link
+              to={`/shop/product/${product.documentId}`}
+              className="flex flex-col mb-2.5 text-[14px]"
+            >
               <span>
                 Size: <span className="text-[#00000099]">{size}</span>
               </span>
@@ -94,12 +118,16 @@ export default function CartProduct({ product }) {
               </span>
             </Link>
             <div className="flex justify-between w-full">
-              <div className="price font-bold text-[24px] text-[#000000]">${product.price}</div>
+              <div className="price font-bold text-[24px] text-[#000000]">
+                ${product.price}
+              </div>
               <QtySelector
                 className={"gap-2.5 lg:gap-5! px-2! py-1! lg:py-2.5! w-fit!"}
                 iconSize={20}
                 selectedQty={qty}
-                setSelectedQty={(newQty) => setSelectedProductOptions(product.documentId, "qty", newQty)}
+                setSelectedQty={(newQty) =>
+                  setSelectedProductOptions(product.documentId, "qty", newQty)
+                }
               />
             </div>
           </div>
