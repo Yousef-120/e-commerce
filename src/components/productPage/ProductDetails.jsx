@@ -11,7 +11,7 @@ import { useStore } from "../../modules/shop/store/useStore";
 import SmallLoader from "../ui/SmallLoader";
 import { toast, Bounce } from "react-toastify";
 import useCheckAuth from "../../modules/core/components/useCheckAuth";
-import { addToCartApi } from "../../modules/shop";
+import { addToCartApi, isProductInCart } from "../../modules/shop";
 import { useUserStore } from "../../modules/shop/store/useUserStore";
 
 export default function ProductDetails({ product, loading }) {
@@ -28,6 +28,7 @@ export default function ProductDetails({ product, loading }) {
   const { setSelectedProductOptions } = useStore();
   const { user, token } = useUserStore();
   const [btnloading, setBtnLoading] = useState(false);
+  const [inCart, setInCart] = useState(false)
 
   const handleAdd = async () => {
     if (isInCart(product.documentId)) return;
@@ -90,6 +91,18 @@ export default function ProductDetails({ product, loading }) {
       setDiscountAvailable(false);
     }
   };
+
+  useEffect(() => {
+    const checkInCart = async () => {
+      const result = await isProductInCart({ token, userId: user?.id, productId: product?.documentId })
+      setInCart(result)
+      console.log(result)
+    }
+
+    checkInCart();
+  }, [product, handleAdd])
+
+
 
   useEffect(() => {
     product && setMainImg(domain + product.mainImg.url);
@@ -198,9 +211,8 @@ export default function ProductDetails({ product, loading }) {
                       <button
                         onClick={() => setselectedSize(size.name)}
                         key={i}
-                        className={`py-3 px-6 rounded-full cursor-pointer transition ${
-                          selectedSize === size.name ? "bg-black text-white" : "bg-[#F0F0F0] text-[#00000099] transition-colors duration-200"
-                        }`}
+                        className={`py-3 px-6 rounded-full cursor-pointer transition ${selectedSize === size.name ? "bg-black text-white" : "bg-[#F0F0F0] text-[#00000099] transition-colors duration-200"
+                          }`}
                       >
                         {size.name}
                       </button>
@@ -214,12 +226,11 @@ export default function ProductDetails({ product, loading }) {
                   <QtySelector selectedQty={selectedQty} setSelectedQty={setSelectedQty} product={product} />
                   <button
                     onClick={handleAdd}
-                    disabled={btnloading || isInCart(product.documentId)}
-                    className={`w-full py-4 px-12 rounded-full font-medium transition ${btnloading && "flex justify-center items-center"} ${
-                      isInCart(product.documentId) ? "bg-[#2d2d2d] text-[#aaaaaa] cursor-not-allowed" : "bg-[#000000] text-[#ffffff] hover:bg-[#1f1f1f] cursor-pointer"
-                    } `}
+                    disabled={btnloading || inCart}
+                    className={`w-full py-4 px-12 rounded-full font-medium transition ${btnloading && "flex justify-center items-center"} ${inCart ? "bg-[#2d2d2d] text-[#aaaaaa] cursor-not-allowed" : "bg-[#000000] text-[#ffffff] hover:bg-[#1f1f1f] cursor-pointer"
+                      } `}
                   >
-                    {btnloading ? <SmallLoader className={"w-6! h-6!"} /> : isInCart(product.documentId) ? "Added To Cart" : "Add To Cart"}
+                    {btnloading ? <SmallLoader className={"w-6! h-6!"} /> : inCart ? "Added To Cart" : "Add To Cart"}
                   </button>
                 </div>
               </div>

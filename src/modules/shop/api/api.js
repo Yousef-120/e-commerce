@@ -157,3 +157,25 @@ export const addToCartApi = async ({ token, userId, productId, color, size, qty 
     throw err;
   }
 };
+
+export const isProductInCart = async ({ token, userId, productId }) => {
+  try {
+    if (!token || !userId) console.log("Not authenticated")
+
+    const payload = {
+      data: {
+        users_permissions_user: userId
+      }
+    }
+
+    const response = await axios.get(`${domain}/api/cart-items?filters[product][documentId][$eq]=${productId}`, {
+      headers: authHeaders(token)
+    })
+
+    console.log(productId)
+    return response.data.data.length > 0
+
+  } catch (error) {
+
+  }
+}

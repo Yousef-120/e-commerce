@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 export default function App() {
   return (
     <BrowserRouter>
-      <ToastContainer />
+      <ToastContainer position="bottom-right"/>
       <AppWrapper />
     </BrowserRouter>
   );
