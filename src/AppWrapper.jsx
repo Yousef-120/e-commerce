@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useUserStore } from "./modules/shop/store/useUserStore";
-import { useLocation, useNavigate } from "react-router-dom";
 import MainLayout from "./Layouts/MainLayout";
 import AuthLayout from "./Layouts/AuthLayout";
 import HomePage from "./pages/HomePage";
@@ -18,9 +17,28 @@ import ScrollToTop from "./components/common/ScrollToTop";
 import { Routes, Route } from "react-router-dom";
 import { tags } from "./modules/core";
 import useCheckAuth from "./modules/core/components/useCheckAuth";
+import { getNumberOfProductsInCart } from "./modules/shop";
+import { cartStore } from "./modules/shop/store/cartStore";
 
 export default function AppWrapper() {
-  useCheckAuth()
+  useCheckAuth();
+  const { user, token } = useUserStore();
+  const setCartLength = cartStore((state) => state.setCartLength);
+
+  useEffect(() => {
+    const loadCartLength = async () => {
+      if (!user || !token) return;
+
+      const count = await getNumberOfProductsInCart({
+        token,
+        userId: user.id,
+      });
+
+      setCartLength(count);
+    };
+
+    loadCartLength();
+  }, [user, token, setCartLength]);
 
   return (
     <>
@@ -39,13 +57,32 @@ export default function AppWrapper() {
           <Route path="/cart" element={<CartPage />} />
 
           {/* New Arrivals */}
-          <Route path="/newArrivals" element={<NewArrivalsPage tag={tags.find((tag) => tag.name == "New Arrivals")} />} />
+          <Route
+            path="/newArrivals"
+            element={
+              <NewArrivalsPage
+                tag={tags.find((tag) => tag.name == "New Arrivals")}
+              />
+            }
+          />
 
           {/* On Sale */}
-          <Route path="/onSale" element={<OnSalePage tag={tags.find((tag) => tag.name == "On Sale")} />} />
+          <Route
+            path="/onSale"
+            element={
+              <OnSalePage tag={tags.find((tag) => tag.name == "On Sale")} />
+            }
+          />
 
           {/* Top Selling */}
-          <Route path="/topSelling" element={<TopSellingPage tag={tags.find((tag) => tag.name == "Top Selling")} />} />
+          <Route
+            path="/topSelling"
+            element={
+              <TopSellingPage
+                tag={tags.find((tag) => tag.name == "Top Selling")}
+              />
+            }
+          />
 
           {/* Brands */}
           <Route path="/brands" element={<Brands />} />

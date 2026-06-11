@@ -1,5 +1,6 @@
 import axios from "axios";
 import { domain } from "../../core/index";
+import { cartStore } from "../store/cartStore";
 
 export const getAllProducts = async () => {
   try {
@@ -127,6 +128,17 @@ export const removeFromCartApi = async ({ token, userId, productId }) => {
       headers: authHeaders(token),
     });
 
+    if (res) {
+      const setCartLength = cartStore.getState().setCartLength;
+
+      const numberOfProductsInCart = await getNumberOfProductsInCart({
+        token,
+        userId,
+      });
+
+      setCartLength(numberOfProductsInCart);
+    }
+
     console.log("Removed From cart API:", res);
     return res.data;
   } catch (err) {
@@ -162,7 +174,15 @@ export const addToCartApi = async ({
     const res = await axios.post(domain + "/api/cart-items", payload, {
       headers: authHeaders(token),
     });
+    if (res) {
+      const setCartLength = cartStore.getState().setCartLength;
 
+      const numberOfProductsInCart = await getNumberOfProductsInCart({
+        token,
+        userId,
+      });
+      setCartLength(numberOfProductsInCart);
+    }
     console.log("Added to cart API:", res.data);
     return res.data;
   } catch (err) {
@@ -222,23 +242,34 @@ export const getProductInCartOptions = async ({ token, productId }) => {
   }
 };
 
-export const getPromoCodes = async ({token})=>
-{
+export const getPromoCodes = async ({ token }) => {
   try {
-    const res = await axios.get(`${domain}/api/promo-codes`,
-      {
-        headers: authHeaders(token)
-      }
-    )
+    const res = await axios.get(`${domain}/api/promo-codes`, {
+      headers: authHeaders(token),
+    });
 
-    if (!res) return
-    const promoCode = res.data.data
+    if (!res) return;
+    const promoCode = res.data.data;
 
-    console.log(res.data.data)
-    return promoCode
+    console.log(res.data.data);
+    return promoCode;
 
-    return 
+    return;
   } catch (error) {
-    console.log(error.response?.data)
+    console.log(error.response?.data);
   }
-}
+};
+
+export const getNumberOfProductsInCart = async ({ token, userId }) => {
+  try {
+    const cartProducts = await getCart({ token, userId });
+
+    const numberOfProductsInCart = cartProducts.length;
+    console.log(numberOfProductsInCart);
+
+    return numberOfProductsInCart;
+  } catch (err) {
+    console.log(err);
+    return 0;
+  }
+};
