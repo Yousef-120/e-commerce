@@ -5,7 +5,8 @@ import { useStore } from "../../modules/shop/store/useStore";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useUserStore } from "../../modules/shop/store/useUserStore";
-import { getPromoCodes } from "../../modules/shop";
+import { getCart, getPromoCodes } from "../../modules/shop";
+import { toast } from "react-toastify";
 
 export default function OrderSummary() {
   const { cart, selectedProductOptions } = useStore();
@@ -14,18 +15,31 @@ export default function OrderSummary() {
   const [discount, setDiscount] = useState(0);
   const [total, setTotal] = useState(0);
   const [deliveryFee] = useState(15);
-  const { token } = useUserStore();
+  const { token, user } = useUserStore();
   const pCodeRef = useRef(null);
+  const [pCodeApplied, setPcodeApplied] = useState(false);
 
-  const handlePCodeRef = () => {
+  const handlePCodeRef = async () => {
+    try {
+      const cart = await getCart({ token, userId: user?.id });
+
+      if (cart.length < 2) {
+        toast.error("At least 2 products are required to apply a promo code.");
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
     pCodeRef.current.focus();
     const pCodeName = pCodeRef.current.value;
+
     if (pCodeName.trim() !== "") {
-      handlePrompCode(pCodeName);
+      handlePromoCode(pCodeName);
     }
   };
 
-  const handlePrompCode = async (promoCodeName) => {
+  const handlePromoCode = async (promoCodeName) => {
     try {
       const promoCodes = await getPromoCodes({ token });
 
@@ -34,10 +48,12 @@ export default function OrderSummary() {
       );
 
       if (promoCodeInfo === undefined) {
-        alert("Promo Code Not True");
+        toast.error("Promo Code Not True");
         return;
       }
       console.log(promoCodeInfo.discount + "%");
+      setPcodeApplied(true);
+      toast.success("Promo code applied successfully!");
     } catch (error) {
       console.log(error);
     }
@@ -109,27 +125,43 @@ export default function OrderSummary() {
           <div className="relative w-[70%] lg:w-[80%]">
             <MdOutlineDiscount
               size={22}
-              className="absolute left-4 top-1/2 translate-y-[-50%] text-[#00000066]"
+              className={`absolute left-4 top-1/2 -translate-y-1/2 ${
+                pCodeApplied ? "text-green-600" : "text-[#00000066]"
+              }`}
             />
+
             <input
-              placeholder="Add promo code"
-              className="rounded-full bg-[#F0F0F0] py-3.5 px-12 placeholder:text-[#00000066] w-full outline-gray-700"
               type="text"
               ref={pCodeRef}
+              placeholder="Add promo code"
+              disabled={pCodeApplied}
+              className={`
+      w-full rounded-full py-3.5 px-12
+      outline-gray-700
+      bg-[#F0F0F0]
+      placeholder:text-[#00000066]
+
+      disabled:bg-[#E5E5E5]
+      disabled:text-[#666666]
+      disabled:pointer-events-none
+      disabled:outline-none
+      ${pCodeApplied && "select-none"}
+    `}
             />
           </div>
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={handlePCodeRef}
+            disabled={pCodeApplied}
             transition={{
               type: "spring",
               stiffness: 200,
               damping: 20,
               mass: 0.8,
             }}
-            className="rounded-full bg-[#000000] py-3 px-4 font-medium text-[16px] leading-[100%] text-[#FFFFFF] w-[30%] lg:w-[20%]"
+            className={`disabled:bg-black/80 disabled:pointer-events-none disabled:text-white/60 rounded-full bg-[#000000] py-3 px-4 font-medium text-[16px] leading-[100%] text-[#FFFFFF] w-[30%] lg:w-[20%]`}
           >
-            Apply
+            {pCodeApplied ? "Applied" : "Apply"}
           </motion.button>
         </div>
         {/* Checkout */}
