@@ -56,21 +56,30 @@ export default function ProfileMenu() {
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-32 rounded-lg  bg-white shadow-xl z-50">
-          <button className="w-full px-4 py-2 text-left hover:bg-gray-100 rounded-lg">
+          <motion.button
+            whileTap={{ scale: 0.90 }}
+            transition={{ type: "spring", stiffness: 150 }}
+            className="w-full px-4 py-2 text-left hover:bg-gray-100 rounded-lg outline-0"
+          >
             Profile
-          </button>
-
-          <button className="w-full px-4 py-2 text-left hover:bg-gray-100 rounded-lg">
+          </motion.button>
+          <motion.button
+            whileTap={{ scale: 0.90 }}
+            transition={{ type: "spring", stiffness: 150 }}
+            className="w-full px-4 py-2 text-left hover:bg-gray-100 rounded-lg outline-0"
+          >
             Settings
-          </button>
+          </motion.button>
 
           {user && token && (
-            <button
+            <motion.button
               onClick={handleLogOut}
-              className="w-full px-4 py-2 text-left text-red-500 hover:bg-gray-100 rounded-lg"
+              whileTap={{ scale: 0.90 }}
+              transition={{ type: "spring", stiffness: 150 }}
+              className="w-full px-4 py-2 text-left text-red-500 hover:bg-gray-100 rounded-lg outline-0"
             >
               Logout
-            </button>
+            </motion.button>
           )}
         </div>
       )}
