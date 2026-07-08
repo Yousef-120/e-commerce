@@ -5,18 +5,24 @@ import { useStore } from "../../modules/shop/store/useStore";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useUserStore } from "../../modules/shop/store/useUserStore";
-import { getCart, getPromoCodes } from "../../modules/shop";
+import {
+  applyPromoCode,
+  deleteAppliedPromoCode,
+  getAppliedPromoCode,
+  getCart,
+  getPromoCodes,
+} from "../../modules/shop";
 import { toast } from "react-toastify";
 
 export default function OrderSummary() {
   const { cart, selectedProductOptions } = useStore();
   const [subTotal, setSubTotal] = useState(0);
-  const [discountRate] = useState(30);
+  const [discountRate, setDiscountRate] = useState(3);
   const [discount, setDiscount] = useState(0);
   const [total, setTotal] = useState(0);
-  const [deliveryFee] = useState(15);
+  const [deliveryFee, setDeliveryFee] = useState(15);
   const { token, user } = useUserStore();
-  const pCodeRef = useRef(null);
+  const [promoCodeValue, setPromoCodeValue] = useState("");
   const [pCodeApplied, setPcodeApplied] = useState(false);
 
   const handlePCodeRef = async () => {
@@ -27,15 +33,12 @@ export default function OrderSummary() {
         toast.error("At least 2 products are required to apply a promo code.");
         return;
       }
+
+      if (promoCodeValue.trim() !== "") {
+        handlePromoCode(promoCodeValue.trim());
+      }
     } catch (error) {
       console.log(error);
-    }
-
-    pCodeRef.current.focus();
-    const pCodeName = pCodeRef.current.value;
-
-    if (pCodeName.trim() !== "") {
-      handlePromoCode(pCodeName);
     }
   };
 
@@ -51,11 +54,36 @@ export default function OrderSummary() {
         toast.error("Promo Code Not True");
         return;
       }
+      if (promoCodeInfo.discount <= discountRate) {
+        toast.warning(
+          "Your available discount is better than promo code discount!",
+        );
+        return;
+      }
+
       console.log(promoCodeInfo.discount + "%");
       setPcodeApplied(true);
+      setDiscountRate(promoCodeInfo.discount);
+      setPromoCodeValue(promoCodeInfo.name);
+      await applyPromoCode({
+        token,
+        userId: user.id,
+        promoCodeId: promoCodeInfo.id,
+      });
       toast.success("Promo code applied successfully!");
     } catch (error) {
       console.log(error);
+    }
+  };
+  const handleDeleteAppliedPromoCode = async () => {
+    const applied = await getAppliedPromoCode({ token, userId: user.id });
+
+    if (applied.length > 0) {
+      const promoDocumentId = applied[0].documentId;
+      const res = await deleteAppliedPromoCode({ token, promoDocumentId });
+      setPcodeApplied(false);
+      setDiscountRate(3);
+      setPromoCodeValue("");
     }
   };
 
@@ -79,6 +107,46 @@ export default function OrderSummary() {
       setTotal(totalValue);
     }
   }, [cart, discountRate, selectedProductOptions]);
+
+  useEffect(() => {
+    if (cart.length < 2 && pCodeApplied && token && user) {
+      handleDeleteAppliedPromoCode();
+      if (cart.length === 1) {
+        toast.warning(
+          "The promo code has been removed because your cart must contain at least two items.",
+        );
+      }
+      console.log("Deleted");
+    }
+  }, [cart, pCodeApplied, token, user]);
+
+  useEffect(() => {
+    const loadPromo = async () => {
+      const applied = await getAppliedPromoCode({ token, userId: user.id });
+      console.log(applied);
+
+      if (cart.length !== 0 && applied.length > 0) {
+        const promo = applied[0].promoCode;
+        setPcodeApplied(true);
+        setDiscountRate(promo.discount);
+        setPromoCodeValue(promo.name);
+      }
+    };
+
+    if (token && user) {
+      loadPromo();
+      console.log("loaded");
+    }
+  }, [token, user, cart]);
+
+  // useEffect(() => {
+  //   if (pCodeApplied) {
+  //     if (discountRate) {
+
+  //     }
+  //     setDiscountRate(50);
+  //   }
+  // }, [pCodeApplied]);
 
   return (
     cart.length > 0 && (
@@ -132,7 +200,8 @@ export default function OrderSummary() {
 
             <input
               type="text"
-              ref={pCodeRef}
+              value={promoCodeValue}
+              onChange={(e) => setPromoCodeValue(e.target.value)}
               placeholder="Add promo code"
               disabled={pCodeApplied}
               className={`

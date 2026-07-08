@@ -9,13 +9,13 @@ import { useEffect } from "react";
 import { getNumberOfProductsInCart } from "../modules/shop";
 import { useUserStore } from "../modules/shop/store/useUserStore";
 import { cartStore } from "../modules/shop/store/cartStore";
+import ProfileMenu from "./ui/ProfileMenu";
 
 export default function Header() {
   const location = useLocation();
   const { setMenuActive } = useStore();
   const { user, token } = useUserStore();
   const cartLength = cartStore((state) => state.cartLength);
-
 
   return (
     <div className="w-full flex justify-center py-6">
@@ -91,9 +91,7 @@ export default function Header() {
                   )}
                 </div>{" "}
               </Link>
-              <Link to="/profile">
-                <CgProfile className="w-6 h-6" />
-              </Link>
+              <ProfileMenu />
             </div>
           </div>
         </div>

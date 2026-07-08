@@ -273,3 +273,52 @@ export const getNumberOfProductsInCart = async ({ token, userId }) => {
     return 0;
   }
 };
+
+export const applyPromoCode = async ({ token, userId, promoCodeId }) => {
+  if (!token || !userId) return [];
+
+  try {
+    const payload = { data: { user: userId, promoCode: promoCodeId } };
+
+    const res = await axios.post(domain + "/api/promo-code-applieds", payload, {
+      headers: authHeaders(token),
+    });
+    console.log(res.data);
+  } catch (error) {
+    console.log(error);
+    console.log(error.response);
+    console.log(error.response?.data);
+  }
+};
+
+export const getAppliedPromoCode = async ({ token, userId }) => {
+  if (!token || !userId) return [];
+
+  try {
+    const res = await axios.get(
+      `${domain}/api/promo-code-applieds?filters[user][id][$eq]=${userId}&populate=promoCode`,
+      {
+        headers: authHeaders(token),
+      },
+    );
+
+    return res.data.data;
+    
+  } catch (error) {
+    console.log(error.response?.data);
+  }
+};
+
+export const deleteAppliedPromoCode = async ({token , promoDocumentId}) =>
+{
+  if (!token || !promoDocumentId) return [];
+  
+  try {
+    const res = await axios.delete(`${domain}/api/promo-code-applieds/${promoDocumentId}` , {
+      headers: authHeaders(token)
+    })
+    return res.data
+  } catch (error) {
+    console.log(error.response?.data)
+  }
+}
