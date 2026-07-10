@@ -5,17 +5,47 @@ import { IoMenu, IoSearch } from "react-icons/io5";
 import { navLinks } from "../modules/core";
 import { useStore } from "../modules/shop/store/useStore";
 import Sidebar from "./Sidebar";
-import { useEffect } from "react";
-import { getNumberOfProductsInCart } from "../modules/shop";
+import { useEffect, useState } from "react";
+import { getNumberOfProductsInCart, searchProducts } from "../modules/shop";
 import { useUserStore } from "../modules/shop/store/useUserStore";
 import { cartStore } from "../modules/shop/store/cartStore";
 import ProfileMenu from "./ui/ProfileMenu";
+import SearchInput from "./ui/SearchInput";
+import { domain } from "../modules/core";
 
 export default function Header() {
   const location = useLocation();
   const { setMenuActive } = useStore();
   const { user, token } = useUserStore();
   const cartLength = cartStore((state) => state.cartLength);
+  const [search, setSearch] = useState("");
+  const [products, setProducts] = useState([]);
+  const [loadingSearch, setLoadingSearch] = useState(false);
+
+  const handleSearchProduct = async (search) => {
+    setLoadingSearch(true);
+    const productFromSearch = await searchProducts({ token, search });
+    setProducts(productFromSearch);
+    setLoadingSearch(false);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!search.trim()) {
+        setProducts([]);
+        return;
+      }
+
+      handleSearchProduct(search);
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  useEffect(() => {
+    console.log(search);
+    console.log(products);
+  }, [products]);
 
   return (
     <div className="w-full flex justify-center py-6">
@@ -61,13 +91,42 @@ export default function Header() {
             </nav>
           </div>
           <div className="md:w-3/5 lg:w-[45%] flex gap-10 items-center">
-            <input
-              className="w-full outline-0 py-3 px-4 rounded-full bg-[#F0F0F0] hidden md:block"
-              type="search"
-              name=""
-              id=""
-              placeholder="Search for products..."
-            />
+            <div className="relative w-full">
+              <SearchInput search={search} setSearch={setSearch} />
+
+              {loadingSearch && products.length === 0 ? (
+                <div className="absolute top-full mt-2 left-0 w-full bg-white rounded-xl shadow-lg border p-4 text-center">
+                  Searching...
+                </div>
+              ) : search.trim() !== "" && products.length > 0 ? (
+                <div className="absolute top-full mt-2 left-0 w-full no-scrollbar max-h-80 overflow-y-auto bg-white rounded-xl shadow-lg border border-gray-200 z-50 overflow-hidden">
+                  {products.map((product) => (
+                    <Link
+                      key={product.documentId}
+                      to={`/product/${product.documentId}`}
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition"
+                    >
+                      <img
+                        src={domain + product.mainImg?.url}
+                        alt={product.name}
+                        className="w-12 h-12 rounded object-cover"
+                      />
+
+                      <div>
+                        <h4 className="font-medium">{product.name}</h4>
+                        <p className="text-sm text-gray-500">
+                          ${product.price}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : search.trim() !== "" ? (
+                <div className="absolute top-full mt-2 left-0 w-full bg-white rounded-xl shadow-lg border p-4 text-center text-gray-500 z-50">
+                  No products found.
+                </div>
+              ) : null}
+            </div>{" "}
             <div className="actions flex gap-3.5">
               <Link to="/" className="block md:hidden">
                 <IoSearch className="w-6 h-6" />

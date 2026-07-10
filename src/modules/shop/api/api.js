@@ -322,3 +322,15 @@ export const deleteAppliedPromoCode = async ({token , promoDocumentId}) =>
     console.log(error.response?.data)
   }
 }
+
+export const searchProducts = async ({token , search}) =>
+{
+  try {
+    const res = await axios.get(`${domain}/api/products?filters[name][$containsi]=${search}&populate=*`,{
+      headers: authHeaders(token)
+    })
+    return res.data.data;
+  } catch (error) {
+    console.log(error.response?.data)
+  }
+}
