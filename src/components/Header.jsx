@@ -5,7 +5,7 @@ import { IoMenu, IoSearch } from "react-icons/io5";
 import { navLinks } from "../modules/core";
 import { useStore } from "../modules/shop/store/useStore";
 import Sidebar from "./Sidebar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getNumberOfProductsInCart, searchProducts } from "../modules/shop";
 import { useUserStore } from "../modules/shop/store/useUserStore";
 import { cartStore } from "../modules/shop/store/cartStore";
@@ -21,6 +21,8 @@ export default function Header() {
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const searchRef = useRef(null);
 
   const handleSearchProduct = async (search) => {
     setLoadingSearch(true);
@@ -46,6 +48,20 @@ export default function Header() {
     console.log(search);
     console.log(products);
   }, [products]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="w-full flex justify-center py-6">
@@ -91,19 +107,28 @@ export default function Header() {
             </nav>
           </div>
           <div className="md:w-3/5 lg:w-[45%] flex gap-10 items-center">
-            <div className="relative w-full">
-              <SearchInput search={search} setSearch={setSearch} />
+            <div className="relative w-full" ref={searchRef}>
+              <SearchInput
+                search={search}
+                setSearch={setSearch}
+                setShowDropdown={setShowDropdown}
+              />
 
-              {loadingSearch && products.length === 0 ? (
+              {showDropdown && loadingSearch && products.length === 0 ? (
                 <div className="absolute top-full mt-2 left-0 w-full bg-white rounded-xl shadow-lg border p-4 text-center">
                   Searching...
                 </div>
-              ) : search.trim() !== "" && products.length > 0 ? (
+              ) : showDropdown && search.trim() !== "" && products.length > 0 ? (
                 <div className="absolute top-full mt-2 left-0 w-full no-scrollbar max-h-80 overflow-y-auto bg-white rounded-xl shadow-lg border border-gray-200 z-50 overflow-hidden">
                   {products.map((product) => (
                     <Link
                       key={product.documentId}
-                      to={`/product/${product.documentId}`}
+                      onClick={() => {
+                        setSearch("");
+                        setProducts([]);
+                        setShowDropdown(false);
+                      }}
+                      to={`/shop/product/${product.documentId}`}
                       className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition"
                     >
                       <img
@@ -121,7 +146,7 @@ export default function Header() {
                     </Link>
                   ))}
                 </div>
-              ) : search.trim() !== "" ? (
+              ) : showDropdown && search.trim() !== "" ? (
                 <div className="absolute top-full mt-2 left-0 w-full bg-white rounded-xl shadow-lg border p-4 text-center text-gray-500 z-50">
                   No products found.
                 </div>
