@@ -13,6 +13,8 @@ import {
   getPromoCodes,
 } from "../../modules/shop";
 import { toast } from "react-toastify";
+import { BiSolidTrash } from "react-icons/bi";
+import Swal from "sweetalert2";
 
 export default function OrderSummary() {
   const { cart, selectedProductOptions } = useStore();
@@ -75,16 +77,35 @@ export default function OrderSummary() {
       console.log(error);
     }
   };
-  const handleDeleteAppliedPromoCode = async () => {
+  const handleDeleteAppliedPromoCode = async (requireConfirmation = false) => {
     const applied = await getAppliedPromoCode({ token, userId: user.id });
 
-    if (applied.length > 0) {
-      const promoDocumentId = applied[0].documentId;
-      const res = await deleteAppliedPromoCode({ token, promoDocumentId });
-      setPcodeApplied(false);
-      setDiscountRate(3);
-      setPromoCodeValue("");
+    if (applied.length === 0) return;
+
+    if (requireConfirmation) {
+      const result = await Swal.fire({
+        title: "Remove Promo Code?",
+        text: "Are you sure you want to remove the applied promo code? You can apply it again later if it's still valid.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#6b7280",
+        confirmButtonText: "Yes, remove it",
+        cancelButtonText: "Cancel",
+        reverseButtons: true,
+      });
+
+      if (!result.isConfirmed) return;
     }
+    
+    const promoDocumentId = applied[0].documentId;
+    
+    await deleteAppliedPromoCode({ token, promoDocumentId });
+    
+    setPcodeApplied(false);
+    setDiscountRate(3);
+    setPromoCodeValue("");
+    requireConfirmation && toast.success("Promo code removed successfully.");
   };
 
   useEffect(() => {
@@ -138,15 +159,6 @@ export default function OrderSummary() {
       console.log("loaded");
     }
   }, [token, user, cart]);
-
-  // useEffect(() => {
-  //   if (pCodeApplied) {
-  //     if (discountRate) {
-
-  //     }
-  //     setDiscountRate(50);
-  //   }
-  // }, [pCodeApplied]);
 
   return (
     cart.length > 0 && (
@@ -217,6 +229,25 @@ export default function OrderSummary() {
       ${pCodeApplied && "select-none"}
     `}
             />
+            {pCodeApplied && (
+              <motion.button
+                whileTap={{ scale: 0.85 }}
+                className="absolute right-4 top-1/2 -translate-y-1/2"
+                onClick={() => handleDeleteAppliedPromoCode(true)}
+              >
+                <motion.div
+                  whileHover={{
+                    rotate: [-8, 8, -8, 8, 0],
+                    scale: 1.05,
+                  }}
+                  transition={{
+                    duration: 0.4,
+                  }}
+                >
+                  <BiSolidTrash color="#FF3333" size={24} />
+                </motion.div>
+              </motion.button>
+            )}
           </div>
           <motion.button
             whileTap={{ scale: 0.95 }}
