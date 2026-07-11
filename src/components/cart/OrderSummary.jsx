@@ -26,57 +26,53 @@ export default function OrderSummary() {
   const { token, user } = useUserStore();
   const [promoCodeValue, setPromoCodeValue] = useState("");
   const [pCodeApplied, setPcodeApplied] = useState(false);
+  const [promoCodeInfo, setPromoCodeInfo] = useState(null);
 
   const handlePCodeRef = async () => {
-    try {
-      const cart = await getCart({ token, userId: user?.id });
-
-      if (cart.length < 2) {
-        toast.error("At least 2 products are required to apply a promo code.");
-        return;
-      }
-
-      if (promoCodeValue.trim() !== "") {
-        handlePromoCode(promoCodeValue.trim());
-      }
-    } catch (error) {
-      console.log(error);
+    if (promoCodeValue.trim() !== "") {
+      handlePromoCode(promoCodeValue.trim());
     }
   };
 
   const handlePromoCode = async (promoCodeName) => {
     try {
       const promoCodes = await getPromoCodes({ token });
+      const cart = await getCart({ token, userId: user?.id });
 
-      const promoCodeInfo = promoCodes.find(
-        (pCode) => promoCodeName === pCode.name,
+      const foundedPromo = promoCodes.find(
+        (pCode) => pCode.name === promoCodeName,
       );
 
-      if (promoCodeInfo === undefined) {
+      if (foundedPromo === undefined) {
         toast.error("Promo Code Not True");
         return;
-      }
-      if (promoCodeInfo.discount <= discountRate) {
+      } else if (cart.length < 2 && foundedPromo.target !== "VIP") {
+        toast.error("At least 2 products are required to apply a promo code.");
+        return;
+      } else if (foundedPromo.discount <= discountRate) {
         toast.warning(
           "Your available discount is better than promo code discount!",
         );
         return;
       }
 
-      console.log(promoCodeInfo.discount + "%");
+      console.log(foundedPromo.discount + "%");
       setPcodeApplied(true);
-      setDiscountRate(promoCodeInfo.discount);
-      setPromoCodeValue(promoCodeInfo.name);
+      setDiscountRate(foundedPromo.discount);
+      setPromoCodeValue(foundedPromo.name);
+      setPromoCodeInfo(foundedPromo);
+      foundedPromo.target === "VIP" ? setDeliveryFee(0) : setDeliveryFee(15);
       await applyPromoCode({
         token,
         userId: user.id,
-        promoCodeId: promoCodeInfo.id,
+        promoCodeId: foundedPromo.id,
       });
       toast.success("Promo code applied successfully!");
     } catch (error) {
       console.log(error);
     }
   };
+
   const handleDeleteAppliedPromoCode = async (requireConfirmation = false) => {
     const applied = await getAppliedPromoCode({ token, userId: user.id });
 
@@ -97,14 +93,16 @@ export default function OrderSummary() {
 
       if (!result.isConfirmed) return;
     }
-    
+
     const promoDocumentId = applied[0].documentId;
-    
+
     await deleteAppliedPromoCode({ token, promoDocumentId });
-    
+
     setPcodeApplied(false);
+    setPromoCodeInfo(null);
     setDiscountRate(3);
     setPromoCodeValue("");
+    setDeliveryFee(15);
     requireConfirmation && toast.success("Promo code removed successfully.");
   };
 
@@ -121,24 +119,31 @@ export default function OrderSummary() {
       }, 0);
 
       const discountValue = Math.round((discountRate / 100) * subTotalCalc);
+
       const totalValue = subTotalCalc - discountValue + deliveryFee;
 
       setSubTotal(subTotalCalc);
       setDiscount(discountValue);
       setTotal(totalValue);
     }
-  }, [cart, discountRate, selectedProductOptions]);
+  }, [cart, discountRate, selectedProductOptions , deliveryFee]);
 
   useEffect(() => {
-    if (cart.length < 2 && pCodeApplied && token && user) {
-      handleDeleteAppliedPromoCode();
-      if (cart.length === 1) {
-        toast.warning(
-          "The promo code has been removed because your cart must contain at least two items.",
-        );
+    const checkPromo = async () => {
+      if (!pCodeApplied || !token || !user) return;
+
+      if (cart.length < 2 && promoCodeInfo?.target !== "VIP") {
+        await handleDeleteAppliedPromoCode();
+
+        if (cart.length === 1) {
+          toast.warning(
+            "The promo code has been removed because your cart must contain at least two items.",
+          );
+        }
       }
-      console.log("Deleted");
-    }
+    };
+
+    checkPromo();
   }, [cart, pCodeApplied, token, user]);
 
   useEffect(() => {
@@ -151,6 +156,8 @@ export default function OrderSummary() {
         setPcodeApplied(true);
         setDiscountRate(promo.discount);
         setPromoCodeValue(promo.name);
+        setPromoCodeInfo(promo);
+        promo.target === "VIP" ? setDeliveryFee(0) : setDeliveryFee(15);
       }
     };
 
