@@ -334,3 +334,66 @@ export const searchProducts = async ({token , search}) =>
     console.log(error.response?.data)
   }
 }
+
+export const increaseQty = async ({ token, userId, productId }) => {
+  if (!token || !userId || !productId) return;
+
+  try {
+    const res = await axios.get(
+      `${domain}/api/cart-items?filters[users_permissions_user][id][$eq]=${userId}&filters[product][documentId][$eq]=${productId}`,
+      {
+        headers: authHeaders(token),
+      }
+    );
+
+    const item = res.data.data[0];
+
+    if (!item) return;
+
+    await axios.put(
+      `${domain}/api/cart-items/${item.documentId}`,
+      {
+        data: {
+          qty: item.qty + 1,
+        },
+      },
+      {
+        headers: authHeaders(token),
+      }
+    );
+  } catch (error) {
+    console.log(error.response?.data);
+  }
+};
+
+export const decreaseQty = async ({ token, userId, productId }) => {
+  console.log("decrease called");
+  if (!token || !userId || !productId) return;
+
+  try {
+    const res = await axios.get(
+      `${domain}/api/cart-items?filters[users_permissions_user][id][$eq]=${userId}&filters[product][documentId][$eq]=${productId}`,
+      {
+        headers: authHeaders(token),
+      }
+    );
+
+    const item = res.data.data[0];
+    console.log("Item:", item);
+    if (!item) return;
+
+    await axios.put(
+      `${domain}/api/cart-items/${item.documentId}`,
+      {
+        data: {
+          qty: item.qty - 1,
+        },
+      },
+      {
+        headers: authHeaders(token),
+      }
+    );
+  } catch (error) {
+    console.log(error.response?.data);
+  }
+};

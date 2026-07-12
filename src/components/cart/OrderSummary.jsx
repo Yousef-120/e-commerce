@@ -10,11 +10,13 @@ import {
   deleteAppliedPromoCode,
   getAppliedPromoCode,
   getCart,
+  getProductInCartOptions,
   getPromoCodes,
 } from "../../modules/shop";
 import { toast } from "react-toastify";
 import { BiSolidTrash } from "react-icons/bi";
 import Swal from "sweetalert2";
+import { cartStore } from "../../modules/shop/store/cartStore";
 
 export default function OrderSummary() {
   const { cart, selectedProductOptions } = useStore();
@@ -27,6 +29,7 @@ export default function OrderSummary() {
   const [promoCodeValue, setPromoCodeValue] = useState("");
   const [pCodeApplied, setPcodeApplied] = useState(false);
   const [promoCodeInfo, setPromoCodeInfo] = useState(null);
+  const cartVersion = cartStore((state) => state.cartVersion);
 
   const handlePCodeRef = async () => {
     if (promoCodeValue.trim() !== "") {
@@ -106,27 +109,54 @@ export default function OrderSummary() {
     requireConfirmation && toast.success("Promo code removed successfully.");
   };
 
+  const handleGetProductInCartOptions = async () => {
+    const res = await getProductInCartOptions({
+      token,
+      productId: product.documentId,
+    });
+    return res;
+  };
+
   useEffect(() => {
-    if (cart && cart.length !== 0) {
-      const subTotalCalc = cart.reduce((total, product) => {
-        const option = selectedProductOptions.find(
-          (opt) => opt.productId === product.documentId,
-        );
-
-        const qty = option?.qty || 1;
-
-        return total + product.price * qty;
+    const calcOrder = async () => {
+      if (!cart.length || !token || !user) return;
+  
+      const items = await Promise.all(
+        cart.map(async (product) => {
+          const options = await getProductInCartOptions({
+            token,
+            productId: product.documentId,
+            userId: user.id
+          });
+  
+          return {
+            product,
+            qty: options?.qty || 1,
+          };
+        })
+      );
+  
+      const subTotalCalc = items.reduce((total, item) => {
+        const discountedPrice =
+          item.product.price * (1 - (item.product.discount || 0) / 100);
+      
+        return total + discountedPrice * item.qty;
       }, 0);
-
-      const discountValue = Math.round((discountRate / 100) * subTotalCalc);
-
-      const totalValue = subTotalCalc - discountValue + deliveryFee;
-
+  
+      const discountValue = Math.round(
+        (discountRate / 100) * subTotalCalc
+      );
+  
+      const totalValue =
+        subTotalCalc - discountValue + deliveryFee;
+  
       setSubTotal(subTotalCalc);
       setDiscount(discountValue);
       setTotal(totalValue);
-    }
-  }, [cart, discountRate, selectedProductOptions , deliveryFee]);
+    };
+  
+    calcOrder();
+  }, [cart, discountRate, deliveryFee, token, user , cartVersion]);
 
   useEffect(() => {
     const checkPromo = async () => {

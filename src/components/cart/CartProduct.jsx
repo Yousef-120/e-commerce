@@ -119,7 +119,7 @@ export default function CartProduct({ product }) {
             </Link>
             <div className="flex justify-between w-full">
               <div className="price font-bold text-[24px] text-[#000000]">
-                ${product.price}
+                ${product.price - ((product.discount / 100 || 0) * product.price)}
               </div>
               <QtySelector
                 className={"gap-2.5 lg:gap-5! px-2! py-1! lg:py-2.5! w-fit!"}
@@ -128,6 +128,7 @@ export default function CartProduct({ product }) {
                 setSelectedQty={(newQty) =>
                   setSelectedProductOptions(product.documentId, "qty", newQty)
                 }
+                product={product}
               />
             </div>
           </div>
