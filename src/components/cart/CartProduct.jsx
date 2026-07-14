@@ -3,39 +3,18 @@ import QtySelector from "../common/QtySelector";
 import { motion } from "framer-motion";
 import { domain } from "../../modules/core/";
 import { useStore } from "../../modules/shop/store/useStore";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import {
-  getProductInCartId,
-  getProductInCartOptions,
-  removeFromCartApi,
-} from "../../modules/shop";
+import { removeFromCartApi } from "../../modules/shop";
 import { useUserStore } from "../../modules/shop/store/useUserStore";
 
 export default function CartProduct({ product }) {
-  const { cart, removeFromCart } = useStore();
-  const { selectedProductOptions, setSelectedProductOptions } = useStore();
-  const { setCart } = useStore();
-  const [size, setSize] = useState();
-  const [color, setColor] = useState();
-  const [qty, setQty] = useState();
   const { user, token } = useUserStore();
   const { fetchCartFromApi } = useStore();
+  const finalPrice =
+    product.price - (product.price * (product.discount || 0)) / 100;
 
-  const getOptions = async () => {
-    const options = await getProductInCartOptions({
-      token,
-      productId: product.documentId,
-    });
-
-    if (options) {
-      setColor(options.color);
-      setSize(options.size);
-      setQty(options.qty);
-    }
-  };
   const handleRemoveFromCart = (product) => {
     Swal.fire({
       title: "Are you sure?",
@@ -51,7 +30,7 @@ export default function CartProduct({ product }) {
 
         setTimeout(async () => {
           try {
-            const removedId = await removeFromCartApi({
+            await removeFromCartApi({
               token,
               userId: user?.id,
               productId: product.documentId,
@@ -71,9 +50,6 @@ export default function CartProduct({ product }) {
       }
     });
   };
-  useEffect(() => {
-    getOptions();
-  });
 
   return (
     <div className="product flex justify-between text-[#000000]">
@@ -111,23 +87,19 @@ export default function CartProduct({ product }) {
               className="flex flex-col mb-2.5 text-[14px]"
             >
               <span>
-                Size: <span className="text-[#00000099]">{size}</span>
+                Size: <span className="text-[#00000099]">{product.size}</span>
               </span>
               <span>
-                Color: <span className="text-[#00000099]">{color}</span>
+                Color: <span className="text-[#00000099]">{product.color}</span>
               </span>
             </Link>
             <div className="flex justify-between w-full">
               <div className="price font-bold text-[24px] text-[#000000]">
-                ${product.price - ((product.discount / 100 || 0) * product.price)}
+                ${finalPrice}
               </div>
               <QtySelector
                 className={"gap-2.5 lg:gap-5! px-2! py-1! lg:py-2.5! w-fit!"}
                 iconSize={20}
-                selectedQty={qty}
-                setSelectedQty={(newQty) =>
-                  setSelectedProductOptions(product.documentId, "qty", newQty)
-                }
                 product={product}
               />
             </div>

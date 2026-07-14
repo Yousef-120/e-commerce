@@ -91,10 +91,21 @@ export const useStore = create((set, get) => ({
         set({ cartLoading: false });
         return;
       }
+      const formattedCart = items.map((product) => {
+        const { cart_items, ...rest } = product;
+
+        return {
+          ...rest,
+          qty: cart_items?.[0]?.qty ?? 1,
+          size: cart_items?.[0]?.size ?? null,
+          color: cart_items?.[0]?.color ?? null,
+        };
+      });
 
       const currentCart = get().cart;
 
-      const isSame = JSON.stringify(currentCart) === JSON.stringify(items);
+      const isSame =
+        JSON.stringify(currentCart) === JSON.stringify(formattedCart);
 
       if (isSame) {
         set({ cartLoading: false });
@@ -102,7 +113,7 @@ export const useStore = create((set, get) => ({
       }
 
       set({
-        cart: items,
+        cart: formattedCart,
         cartLoading: false,
       });
     } catch (err) {
@@ -114,7 +125,6 @@ export const useStore = create((set, get) => ({
   },
 
   addToCartWithApi: async ({ product, color, size, qty }) => {
-    // لو المنتج موجود بالفعل في الكارت المحلي، منخرجش طلب جديد
     const exists = get().cart.some((p) => p.documentId === product.documentId);
     if (exists) return;
 
@@ -129,11 +139,29 @@ export const useStore = create((set, get) => ({
       qty,
     });
 
-    // بعد نجاح الـ API نضيفه محليًا عشان الـ UI يتحدث
     set((state) => ({
-      cart: [...state.cart, product],
+      cart: [
+        ...state.cart,
+        {
+          ...product,
+          qty,
+          size,
+          color,
+        },
+      ],
     }));
   },
 
+  updateCartQty: (documentId, qty) =>
+    set((state) => ({
+      cart: state.cart.map((product) =>
+        product.documentId === documentId
+          ? {
+              ...product,
+              qty,
+            }
+          : product,
+      ),
+    })),
   isInCart: (id) => get().cart.some((product) => product.documentId === id),
 }));

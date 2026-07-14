@@ -1,15 +1,9 @@
 import { FiMinus, FiPlus } from "react-icons/fi";
 import { useStore } from "../../modules/shop/store/useStore";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useUserStore } from "../../modules/shop/store/useUserStore";
-import {
-  decreaseQty,
-  getProductInCartOptions,
-  increaseQty,
-  isProductInCart,
-} from "../../modules/shop";
-import { cartStore } from "../../modules/shop/store/cartStore";
+import { decreaseQty, increaseQty } from "../../modules/shop";
 
 export default function QtySelector({
   className,
@@ -18,132 +12,65 @@ export default function QtySelector({
   setSelectedQty,
   product,
 }) {
-  const { selectedProductOptions } = useStore();
-  const { cart, isInCart } = useStore();
-  const { cartLength } = cartStore();
-  const [addedToCart, setAddedToCart] = useState();
   const location = useLocation();
   const { user, token } = useUserStore();
-  const [qtyFromApi, setQtyFromApi] = useState(null);
   const [updatingQty, setUpdatingQty] = useState(false);
-  const refreshCart = cartStore((state) => state.refreshCart);
+  const { cart, updateCartQty } = useStore();
+  const isCartPage = location.pathname === "/cart";
+  const displayedQty = isCartPage ? product.qty : selectedQty;
+  const addedToCart =
+    !isCartPage && cart.some((item) => item.documentId === product.documentId);
 
-  const handleDecrease = async () => {
+  const handleUpdateQty = async (change) => {
     if (updatingQty) return;
-  
-    if (location.pathname === "/cart") {
-      if (qtyFromApi <= 1) return;
-  
-      setUpdatingQty(true);
-  
-      try {
-        await decreaseQty({
-          userId: user.id,
-          token,
-          productId: product.documentId,
-        });
-        const options = await handleGetProductInCartOptions();
-        
-        setQtyFromApi(options.qty);
-        refreshCart();
-      } finally {
-        setUpdatingQty(false);
-      }
-  
+
+    if (!isCartPage) {
+      setSelectedQty((prev) => Math.min(10, Math.max(1, prev + change)));
       return;
     }
-  
-    if (selectedQty > 1) {
-      setSelectedQty(selectedQty - 1);
-    }
-  };
 
-  const handleIncrease = async () => {
-    if (updatingQty) return;
-  
-    if (location.pathname === "/cart") {
-      if (qtyFromApi >= 10) return;
-  
-      setUpdatingQty(true);
-  
-      try {
-        await increaseQty({
-          userId: user.id,
-          token,
-          productId: product.documentId,
-        });
-  
-        const options = await handleGetProductInCartOptions();
-  
-        setQtyFromApi(options.qty);
-        refreshCart();
-      } finally {
-        setUpdatingQty(false);
-      }
-  
-      return;
-    }
-  
-    if (selectedQty < 10) {
-      setSelectedQty(selectedQty + 1);
-    }
-  };
+    if (product.qty + change > 10 || product.qty + change < 1) return;
 
-  const handleGetProductInCartOptions = async () => {
-    const res = await getProductInCartOptions({
-      token,
-      productId: product.documentId,
-    });
-    return res;
-  };
+    setUpdatingQty(true);
 
-  useEffect(() => {
-    const check = async () => {
-      const inCart = await isProductInCart({
+    try {
+      const action = change > 0 ? increaseQty : decreaseQty;
+
+      await action({
+        userId: user.id,
         token,
-        userId: user?.id,
         productId: product.documentId,
       });
-      setAddedToCart(inCart);
-      if (inCart) {
-        const options = await handleGetProductInCartOptions();
-        setQtyFromApi(options?.qty || null);
-      }
-    };
-    check();
-  }, [product, cartLength]);
 
-  useEffect(() => {
-    console.log(addedToCart);
-  }, [addedToCart]);
+      updateCartQty(product.documentId, product.qty + change);
+    } finally {
+      setUpdatingQty(false);
+    }
+  };
 
   return (
     <div
-      className={`qty-selector ${addedToCart && location.pathname !== "/cart" && "opacity-50"} py-2.5 px-4 flex items-center sm:gap-[38px] bg-[#F0F0F0] rounded-full w-full sm:w-fit ${className}`}
+      className={`qty-selector ${addedToCart && "opacity-50"} py-2.5 px-4 flex items-center sm:gap-[38px] bg-[#F0F0F0] rounded-full w-full sm:w-fit ${className}`}
     >
       {/* Minus Button */}
       <button
-        disabled={addedToCart && location.pathname !== "/cart"}
-        onClick={handleDecrease}
-        className={`p-1.5 rounded-full hover:bg-[#e0e0e0] transition-colors ${addedToCart && location.pathname !== "/cart" && "pointer-events-none"}`}
+        disabled={addedToCart}
+        onClick={() => handleUpdateQty(-1)}
+        className={`p-1.5 rounded-full hover:bg-[#e0e0e0] transition-colors ${addedToCart && "pointer-events-none"}`}
       >
         <FiMinus size={iconSize || 26} />
       </button>
 
       {/* Quantity Display */}
       <div className="w-5 flex justify-center items-center select-none">
-        {addedToCart || location.pathname === "/cart" ? (
-          <span className="font-bold text-[14px]">{qtyFromApi}</span>
-        ) : (
-          <span className="font-bold text-[14px]">{selectedQty}</span>
-        )}
+        <span className="font-bold text-[14px]">{displayedQty}</span>
       </div>
 
       {/* Plus Button */}
       <button
-        disabled={addedToCart && location.pathname !== "/cart"}
-        onClick={handleIncrease}
-        className={`p-1.5 rounded-full hover:bg-[#e0e0e0] transition-colors ${addedToCart && location.pathname !== "/cart" && "pointer-events-none"}`}
+        disabled={addedToCart}
+        onClick={() => handleUpdateQty(1)}
+        className={`p-1.5 rounded-full hover:bg-[#e0e0e0] transition-colors ${addedToCart && "pointer-events-none"}`}
       >
         <FiPlus size={iconSize || 26} />
       </button>
