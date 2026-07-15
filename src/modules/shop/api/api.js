@@ -58,7 +58,7 @@ export const getCart = async ({ token, userId } = {}) => {
     });
     const data = res.data?.data;
     console.log("Cart-items from API:", data);
-
+    console.log("FIRST ITEM", data[0]);
     if (!Array.isArray(data)) return [];
 
     const normalize = (p) =>

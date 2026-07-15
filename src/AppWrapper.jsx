@@ -19,11 +19,24 @@ import { tags } from "./modules/core";
 import useCheckAuth from "./modules/core/components/useCheckAuth";
 import { getNumberOfProductsInCart } from "./modules/shop";
 import { cartStore } from "./modules/shop/store/cartStore";
+import { useStore } from "./modules/shop/store/useStore";
 
 export default function AppWrapper() {
   useCheckAuth();
   const { user, token } = useUserStore();
   const setCartLength = cartStore((state) => state.setCartLength);
+  const { fetchCartFromApi } = useStore();
+
+  useEffect(() => {
+    console.log("APP TOKEN:", token);
+    console.log("APP USER:", user);
+  
+    if (!token || !user?.id) return;
+  
+    console.log("FETCH CART FROM APP");
+  
+    fetchCartFromApi();
+  }, [token, user?.id]);
 
   useEffect(() => {
     const loadCartLength = async () => {
