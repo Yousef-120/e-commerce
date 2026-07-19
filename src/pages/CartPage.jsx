@@ -28,7 +28,7 @@ export default function CartPage() {
       return () => clearTimeout(timer);
     };
     handleGetCart()
-  }, [cart]);
+  }, [cart?.length]);
 
   return (
     <div>

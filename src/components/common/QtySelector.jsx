@@ -16,20 +16,30 @@ export default function QtySelector({
   const { user, token } = useUserStore();
   const [updatingQty, setUpdatingQty] = useState(false);
   const { cart, updateCartQty } = useStore();
+
   const isCartPage = location.pathname === "/cart";
   const displayedQty = isCartPage ? product.qty : selectedQty;
+
   const addedToCart =
     !isCartPage && cart.some((item) => item.documentId === product.documentId);
+
+  const maxQty = product.stock ?? 1;
+
+  const isMinusDisabled = addedToCart || displayedQty <= 1 || updatingQty;
+
+  const isPlusDisabled = addedToCart || displayedQty >= maxQty || updatingQty;
 
   const handleUpdateQty = async (change) => {
     if (updatingQty) return;
 
     if (!isCartPage) {
-      setSelectedQty((prev) => Math.min(10, Math.max(1, prev + change)));
+      setSelectedQty((prev) => Math.min(maxQty, Math.max(1, prev + change)));
       return;
     }
 
-    if (product.qty + change > 10 || product.qty + change < 1) return;
+    const newQty = product.qty + change;
+
+    if (newQty > maxQty || newQty < 1) return;
 
     setUpdatingQty(true);
 
@@ -42,7 +52,7 @@ export default function QtySelector({
         productId: product.documentId,
       });
 
-      updateCartQty(product.documentId, product.qty + change);
+      updateCartQty(product.documentId, newQty);
     } finally {
       setUpdatingQty(false);
     }
@@ -50,13 +60,19 @@ export default function QtySelector({
 
   return (
     <div
-      className={`qty-selector ${addedToCart && "opacity-50"} py-2.5 px-4 flex items-center sm:gap-[38px] bg-[#F0F0F0] rounded-full w-full sm:w-fit ${className}`}
+      className={`qty-selector ${
+        addedToCart && "opacity-50"
+      } py-2.5 px-4 flex items-center sm:gap-[38px] bg-[#F0F0F0] rounded-full w-full sm:w-fit ${className}`}
     >
       {/* Minus Button */}
       <button
-        disabled={addedToCart}
+        disabled={isMinusDisabled}
         onClick={() => handleUpdateQty(-1)}
-        className={`p-1.5 rounded-full hover:bg-[#e0e0e0] transition-colors ${addedToCart && "pointer-events-none"}`}
+        className={`p-1.5 rounded-full transition-colors ${
+          isMinusDisabled
+            ? "opacity-50 cursor-not-allowed"
+            : "hover:bg-[#e0e0e0]"
+        }`}
       >
         <FiMinus size={iconSize || 26} />
       </button>
@@ -68,9 +84,13 @@ export default function QtySelector({
 
       {/* Plus Button */}
       <button
-        disabled={addedToCart}
+        disabled={isPlusDisabled}
         onClick={() => handleUpdateQty(1)}
-        className={`p-1.5 rounded-full hover:bg-[#e0e0e0] transition-colors ${addedToCart && "pointer-events-none"}`}
+        className={`p-1.5 rounded-full transition-colors ${
+          isPlusDisabled
+            ? "opacity-50 cursor-not-allowed"
+            : "hover:bg-[#e0e0e0]"
+        }`}
       >
         <FiPlus size={iconSize || 26} />
       </button>
