@@ -1,1 +1,1 @@
-export const domain = "http://localhost:1337";
+export const domain = import.meta.env.VITE_API_URL;
