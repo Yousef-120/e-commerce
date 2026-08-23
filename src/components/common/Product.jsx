@@ -8,6 +8,11 @@ export default function Product({ product, variant = "default", breadcrumbs = []
 
   const [priceAfterDiscount, setPriceAfterDiscount] = useState(null);
   const [discountAvailable, setDiscountAvailable] = useState(false);
+  const imageUrl = product?.mainImg?.url?.trim();
+
+  const fullImageUrl = imageUrl?.startsWith("http")
+    ? imageUrl.replace(/^https?:?\/\//, "https://")
+    : `${domain}${imageUrl}`;
 
   useEffect(() => {
     if (product?.discount) {
@@ -30,7 +35,7 @@ export default function Product({ product, variant = "default", breadcrumbs = []
       className="product"
     >
       <div className="img-wrapper bg-[#F0EEED] rounded-[20px] overflow-hidden aspect-square flex items-center justify-center">
-        <img className="w-full h-full object-cover" src={domain + product.mainImg.url} alt={product.name} />
+        <img className="w-full h-full object-cover" src={fullImageUrl} alt={product.name} />
       </div>
 
       <h1 className={`capitalize font-bold leading-[100%] truncate ${isShop ? "text-[16px] lg:text-[20px] mt-2.5 lg:mt-4" : "text-[20px] mt-4"}`}>{product.name}</h1>

@@ -12,6 +12,12 @@ import { useUserStore } from "../../modules/shop/store/useUserStore";
 export default function CartProduct({ product }) {
   const { user, token } = useUserStore();
   const { fetchCartFromApi } = useStore();
+  const imageUrl = product?.mainImg?.url?.trim();
+
+  const fullImageUrl = imageUrl?.startsWith("http")
+    ? imageUrl.replace(/^https?:?\/\//, "https://")
+    : `${domain}${imageUrl}`;
+
   const finalPrice =
     product.price - (product.price * (product.discount || 0)) / 100;
 
@@ -60,7 +66,7 @@ export default function CartProduct({ product }) {
         >
           <img
             className="object-cover w-full h-full"
-            src={domain + product.mainImg?.url}
+            src={fullImageUrl}
             alt=""
           />
         </Link>
