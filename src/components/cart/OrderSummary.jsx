@@ -59,7 +59,6 @@ export default function OrderSummary() {
         return;
       }
 
-      console.log(foundedPromo.discount + "%");
       setPcodeApplied(true);
       setDiscountRate(foundedPromo.discount);
       setPromoCodeValue(foundedPromo.name);
@@ -71,8 +70,7 @@ export default function OrderSummary() {
         promoCodeId: foundedPromo.id,
       });
       toast.success("Promo code applied successfully!");
-    } catch (error) {
-      console.log(error);
+    } catch {
     }
   };
 
@@ -179,7 +177,6 @@ export default function OrderSummary() {
   useEffect(() => {
     const loadPromo = async () => {
       const applied = await getAppliedPromoCode({ token, userId: user.id });
-      console.log(applied);
 
       if (cart.length !== 0 && applied.length > 0) {
         const promo = applied[0].promoCode;
@@ -193,7 +190,6 @@ export default function OrderSummary() {
 
     if (token && user) {
       loadPromo();
-      console.log("loaded");
     }
   }, [token, user, cart]);
 

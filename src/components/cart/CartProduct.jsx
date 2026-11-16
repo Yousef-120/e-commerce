@@ -43,8 +43,7 @@ export default function CartProduct({ product }) {
             });
 
             await fetchCartFromApi();
-          } catch (error) {
-            console.log(error);
+          } catch {
           }
           toast.update(toastId, {
             render: "Product removed from cart successfully",

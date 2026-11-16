@@ -45,11 +45,6 @@ export default function Header() {
   }, [search]);
 
   useEffect(() => {
-    console.log(search);
-    console.log(products);
-  }, [products]);
-
-  useEffect(() => {
     const handleClickOutside = (e) => {
       if (searchRef.current && !searchRef.current.contains(e.target)) {
         setShowDropdown(false);

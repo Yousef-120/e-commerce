@@ -13,10 +13,6 @@ export default function ProductPage() {
     fetchOneProduct(id);
   }, [id]);
 
-  useEffect(() => {
-    console.log(product);
-  }, [product]);
-  
   return (
     <div>
       <ProductDetails product={product} loading={loading}/>

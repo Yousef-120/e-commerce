@@ -5,7 +5,6 @@ import { cartStore } from "../store/cartStore";
 export const getAllProducts = async () => {
   try {
     const res = await axios.get(domain + "/api/products?populate=*");
-    console.log(res.data.data);
     return res.data.data;
   } catch (err) {
     console.error("Problem With Get All Products", err);
@@ -17,7 +16,6 @@ export const getOneProduct = async (productId) => {
     const res = await axios.get(
       domain + `/api/products/${productId}?populate=*`,
     );
-    console.log(res.data.data);
     return res.data.data;
   } catch (err) {
     console.error("Problem With Get The Product", err);
@@ -27,7 +25,6 @@ export const getOneProduct = async (productId) => {
 export const getAllSizes = async () => {
   try {
     const res = await axios.get(domain + `/api/sizes`);
-    console.log(res.data.data);
     return res.data.data;
   } catch (err) {
     console.error("Problem With Get Sizes", err);
@@ -57,8 +54,6 @@ export const getCart = async ({ token, userId } = {}) => {
       },
     });
     const data = res.data?.data;
-    console.log("Cart-items from API:", data);
-    console.log("FIRST ITEM", data[0]);
     if (!Array.isArray(data)) return [];
 
     const normalize = (p) =>
@@ -102,7 +97,6 @@ export const getProductInCartId = async ({ token, userId, productId } = {}) => {
     });
 
     const cartProducts = res.data?.data;
-    console.log(cartProducts);
 
     const productInCart = cartProducts.find(
       (cartProduct) => cartProduct.product.documentId === productId,
@@ -110,8 +104,7 @@ export const getProductInCartId = async ({ token, userId, productId } = {}) => {
     const productInCartId = productInCart?.documentId;
 
     return productInCartId;
-  } catch (err) {
-    console.log(err);
+  } catch {
   }
 };
 
@@ -120,7 +113,6 @@ export const removeFromCartApi = async ({ token, userId, productId }) => {
     const id = await getProductInCartId({ token, userId, productId });
 
     if (!id) {
-      console.log("Product not found in cart");
       return;
     }
 
@@ -139,7 +131,6 @@ export const removeFromCartApi = async ({ token, userId, productId }) => {
       setCartLength(numberOfProductsInCart);
     }
 
-    console.log("Removed From cart API:", res);
     return res.data;
   } catch (err) {
     console.error("Problem With Remove From Cart API", err);
@@ -169,8 +160,6 @@ export const addToCartApi = async ({
       },
     };
 
-    console.log("PAYLOAD =>", payload);
-
     const res = await axios.post(domain + "/api/cart-items", payload, {
       headers: authHeaders(token),
     });
@@ -183,7 +172,6 @@ export const addToCartApi = async ({
       });
       setCartLength(numberOfProductsInCart);
     }
-    console.log("Added to cart API:", res.data);
     return res.data;
   } catch (err) {
     console.error("Problem With Add To Cart API", err);
@@ -194,8 +182,6 @@ export const addToCartApi = async ({
 
 export const isProductInCart = async ({ token, userId, productId }) => {
   try {
-    if (!token || !userId) console.log("Not authenticated");
-
     const response = await axios.get(
       `${domain}/api/cart-items?filters[product][documentId][$eq]=${productId}`,
       {
@@ -233,12 +219,8 @@ export const getProductInCartOptions = async ({ token, productId }) => {
       qty: productInCart.qty,
     };
 
-    console.log(productInCart);
-    console.log(options);
-
     return options;
-  } catch (error) {
-    console.log(error);
+  } catch {
   }
 };
 
@@ -251,12 +233,8 @@ export const getPromoCodes = async ({ token }) => {
     if (!res) return;
     const promoCode = res.data.data;
 
-    console.log(res.data.data);
     return promoCode;
-
-    return;
-  } catch (error) {
-    console.log(error.response?.data);
+  } catch {
   }
 };
 
@@ -265,11 +243,9 @@ export const getNumberOfProductsInCart = async ({ token, userId }) => {
     const cartProducts = await getCart({ token, userId });
 
     const numberOfProductsInCart = cartProducts.length;
-    console.log(numberOfProductsInCart);
 
     return numberOfProductsInCart;
-  } catch (err) {
-    console.log(err);
+  } catch {
     return 0;
   }
 };
@@ -280,14 +256,10 @@ export const applyPromoCode = async ({ token, userId, promoCodeId }) => {
   try {
     const payload = { data: { user: userId, promoCode: promoCodeId } };
 
-    const res = await axios.post(domain + "/api/promo-code-applieds", payload, {
+    await axios.post(domain + "/api/promo-code-applieds", payload, {
       headers: authHeaders(token),
     });
-    console.log(res.data);
-  } catch (error) {
-    console.log(error);
-    console.log(error.response);
-    console.log(error.response?.data);
+  } catch {
   }
 };
 
@@ -303,9 +275,7 @@ export const getAppliedPromoCode = async ({ token, userId }) => {
     );
 
     return res.data.data;
-    
-  } catch (error) {
-    console.log(error.response?.data);
+  } catch {
   }
 };
 
@@ -318,8 +288,7 @@ export const deleteAppliedPromoCode = async ({token , promoDocumentId}) =>
       headers: authHeaders(token)
     })
     return res.data
-  } catch (error) {
-    console.log(error.response?.data)
+  } catch {
   }
 }
 
@@ -330,8 +299,7 @@ export const searchProducts = async ({token , search}) =>
       headers: authHeaders(token)
     })
     return res.data.data;
-  } catch (error) {
-    console.log(error.response?.data)
+  } catch {
   }
 }
 
@@ -361,13 +329,11 @@ export const increaseQty = async ({ token, userId, productId }) => {
         headers: authHeaders(token),
       }
     );
-  } catch (error) {
-    console.log(error.response?.data);
+  } catch {
   }
 };
 
 export const decreaseQty = async ({ token, userId, productId }) => {
-  console.log("decrease called");
   if (!token || !userId || !productId) return;
 
   try {
@@ -379,7 +345,6 @@ export const decreaseQty = async ({ token, userId, productId }) => {
     );
 
     const item = res.data.data[0];
-    console.log("Item:", item);
     if (!item) return;
 
     await axios.put(
@@ -393,7 +358,6 @@ export const decreaseQty = async ({ token, userId, productId }) => {
         headers: authHeaders(token),
       }
     );
-  } catch (error) {
-    console.log(error.response?.data);
+  } catch {
   }
 };

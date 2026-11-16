@@ -86,7 +86,6 @@ export const useStore = create((set, get) => ({
     try {
       const { token, user } = useUserStore.getState();
       const items = await getCart({ token, userId: user?.id });
-      console.log("items from getCart", items);
       if (!items) {
         set({ cartLoading: false });
         return;
@@ -101,7 +100,6 @@ export const useStore = create((set, get) => ({
           color: cart_items?.[0]?.color ?? null,
         };
       });
-      console.log("formattedCart", formattedCart);
 
       const currentCart = get().cart;
 
@@ -116,7 +114,6 @@ export const useStore = create((set, get) => ({
         cart: formattedCart,
         cartLoading: false,
       });
-      console.log("after set", get().cart);
     } catch (err) {
       set({
         cartError: err?.message || "Failed to fetch cart",

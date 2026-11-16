@@ -22,7 +22,6 @@ export default function ShopProduct({ product }) {
   };
   useEffect(() => {
     handleDiscount();
-    console.log("IMAGE URL:", product.mainImg.url);
   }, [product]);
 
   return (

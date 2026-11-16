@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { addToCartApi } from "../../../../modules/shop";
 import { useStore } from "../../../../modules/shop/store/useStore";
@@ -22,25 +22,6 @@ export default function useProductDetails(product) {
     () => cart.some((item) => item.documentId === product?.documentId),
     [cart, product?.documentId],
   );
-
-  useEffect(() => {
-    console.log("Current Product", product?.documentId);
-
-    console.log(
-      "Cart Products",
-      cart.map((i) => i.documentId),
-    );
-
-    console.log(
-      "Result",
-      cart.some((i) => i.documentId === product?.documentId),
-    );
-  }, [cart, product]);
-
-  useEffect(() => {
-    console.log(cart);
-    console.log(inCart);
-  }, [cart, inCart]);
 
   const finalPrice = useMemo(() => {
     if (!product) return 0;
@@ -82,9 +63,7 @@ export default function useProductDetails(product) {
         isLoading: false,
         autoClose: 3000,
       });
-    } catch (error) {
-      console.log(error);
-
+    } catch {
       toast.update(toastId, {
         render: "Failed to add to cart",
         type: "error",

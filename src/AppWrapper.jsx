@@ -28,13 +28,8 @@ export default function AppWrapper() {
   const { fetchCartFromApi } = useStore();
 
   useEffect(() => {
-    console.log("APP TOKEN:", token);
-    console.log("APP USER:", user);
-  
     if (!token || !user?.id) return;
-  
-    console.log("FETCH CART FROM APP");
-  
+
     fetchCartFromApi();
   }, [token, user?.id]);
 
