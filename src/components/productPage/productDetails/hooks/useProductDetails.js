@@ -42,7 +42,18 @@ export default function useProductDetails(product) {
     setBtnLoading(true);
 
     const toastId = toast.loading("Adding product to cart...");
-
+    if (!user || !token) {
+      setTimeout(() => {
+        toast.update(toastId, {
+          render: "You must log in first to add items to your cart.",
+          type: "warning",
+          isLoading: false,
+          autoClose: 3000,
+        });
+        setBtnLoading(false);
+      }, 3000);
+      return;
+    }
     try {
       await addToCartWithApi({
         product: product,

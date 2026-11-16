@@ -127,7 +127,7 @@ export const useStore = create((set, get) => ({
     if (exists) return;
 
     const { token, user } = useUserStore.getState();
-
+    
     await addToCartApi({
       token,
       userId: user?.id,
